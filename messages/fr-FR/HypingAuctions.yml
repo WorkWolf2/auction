@@ -1,0 +1,101 @@
+metadata: {}
+messages:
+  # Messages généraux
+  player-not-exist: "&cCe joueur n'existe pas."
+  invalid-arguments: "&cArguments invalides."
+  invalid-command: "&cCommande invalide."
+  no-permission: "&cVous n'avez pas la permission de faire cela."
+
+  # Messages de bannissement
+  success-player-banned: "&aLe joueur a été banni de l'hôtel des ventes."
+  your-are-banned: "&cVous êtes banni de l'hôtel des ventes."
+  player-not-banned: "&cCe joueur n'est pas banni."
+  player-unbanned: "&aLe joueur a été débanni de l'hôtel des ventes."
+
+  # Messages de contexte
+  no-context: "&cAucun contexte d'enchère trouvé."
+  sale-not-exist: "&cCette vente n'existe pas."
+  cannot-buy-own: "&cVous ne pouvez pas acheter vos propres objets."
+  sale-expired: "&cCette vente a expiré."
+
+  # Messages d'argent
+  not-enough-money: "&cVous n'avez pas assez d'argent pour acheter cet objet."
+  not-enough-money-sell: "&cVous n'avez pas assez d'argent pour mettre cet objet en vente."
+
+  # Messages d'achat
+  already-bought: "&cCet objet a déjà été acheté."
+  purchase-success: "&aVous avez acheté l'objet pour &f{0}&a!"
+  purchase-success-delivered-to-inventory: "&aObjet livré dans votre inventaire."
+  purchase-success-added-to-bought-items: "&aObjet ajouté à vos achats. Utilisez &f/ah back &apour le récupérer."
+
+  # Messages d'enchère
+  invalid-auction-id: "&cID d'enchère invalide."
+  success-auction-expired: "&aEnchère expirée avec succès."
+
+  # Messages d'objet
+  invalid-type: "&cCe type d'objet n'est pas autorisé: {0}"
+  item-durability-too-low: "&cLa durabilité de cet objet est trop faible pour le vendre."
+
+  # Messages de recherche
+  search-set: "&aFiltre de recherche défini: &f{0}"
+  search-filter-cleared: "&aFiltre de recherche effacé."
+
+  # Messages de vente
+  sales-limit-reached: "&cVous avez atteint votre limite de ventes."
+  invalid-currency: "&cMonnaie invalide."
+  minimum-price: "&cLe prix minimum est &f{0}&c."
+  maximum-price: "&cLe prix maximum est &f{0}&c."
+  no-item-in-hand: "&cVous devez tenir un objet dans votre main."
+  item-not-allowed: "&cCet objet n'est pas autorisé dans l'hôtel des ventes."
+  sell-usage: "&eUtilisation: &f/ah sell <prix>"
+  sell-missing-price: "&cVeuillez spécifier un prix."
+  sell-invalid-number: "&cPrix invalide. Veuillez entrer un nombre valide."
+  sell-out-of-range: "&cLe prix est hors de la plage autorisée."
+  sell-blacklisted: "&cCet objet est sur liste noire et ne peut pas être vendu."
+  sell-item-changed: "&cL'objet dans votre main a changé pendant la mise en vente."
+  sell-input-canceled: "&eSaisie de vente annulée."
+  sell-sign-unavailable: "&cLa saisie par panneau est actuellement indisponible."
+  sell-auction-house-full: "&cL'hôtel des ventes est plein. Réessayez plus tard."
+  sell-currency-not-allowed: "&cCette monnaie n'est pas autorisée pour la vente."
+  success-item-sold: "&aObjet mis en vente avec succès pour &f{0}&a!"
+  success-withdraw: "&aObjet retiré avec succès."
+
+  # Messages d'historique des transactions
+  transaction-history-title: "&6&l=== Votre Historique de Transactions ==="
+  transaction-history-title-for-player: "&6&l=== Historique de Transactions de {0} ==="
+  transaction-format: "&7{0} &8- &f{1} &8- &a{2}"
+  no-transaction: "&eVous n'avez pas d'historique de transactions."
+  no-transaction-for-player: "&eCe joueur n'a pas d'historique de transactions."
+  transaction-format-bought-format: "&7{0} &8- &aAcheté &f{1} &7de &f{2} &7pour &a{3}"
+  transaction-format-sold-format: "&7{0} &8- &eVendu &f{1} &7à &f{2} &7pour &a{3}"
+
+  # Messages d'historique
+  history-permission-denied: "&cVous n'avez pas la permission de voir l'historique d'autres joueurs."
+  history-usage: "&eUtilisation: &f/ah history [joueur]"
+
+  # Joueur uniquement
+  player-only-command: "&cCette commande ne peut être utilisée que par les joueurs."
+
+  # Messages de slots premium
+  premium-promotion-success: "&aObjet promu en slot premium!"
+  premium-promotion-failed: "&cÉchec de la promotion en slot premium."
+  premium-no-slots-available: "&cAucun slot premium disponible."
+  premium-insufficient-funds: "&cVous n'avez pas assez d'argent pour la promotion premium."
+  premium-already-premium: "&cCet objet est déjà dans un slot premium."
+  premium-expired-item: "&cImpossible de promouvoir un objet expiré."
+  premium-duration-info: "&eDurée premium: &f{0}"
+
+  # Notifications vendeur
+  seller-item-sold-notification: "&a[Enchère] &fVotre &e{0} &fa été vendu pour &a{1} &fà &e{2}&f!"
+
+  # Résumé des ventes à la reconnexion
+  reconnection-sales-summary-header: "&6&l=== Ventes Pendant Votre Absence ==="
+  reconnection-sales-summary-item: "&7- &f{0} &7vendu pour &a{1} &7à &f{2}"
+  reconnection-sales-summary-footer: "&6&lTotal: &a{0}"
+  reconnection-sales-summary-no-sales: "&7Aucun objet n'a été vendu pendant votre absence."
+
+  # Messages d'annulation de vente
+  cancel-disabled: "&cL'annulation des ventes est actuellement désactivée."
+  cancel-nothing-to-cancel: "&cVous n'avez aucune vente à annuler."
+  cancel-already-sold: "&cCet objet a déjà été vendu."
+  cancel-success: "&aVente annulée. Objet retourné dans votre inventaire."

@@ -1,0 +1,246 @@
+minimum-price: 100
+maximum-price: 1000000
+minimum-durability-percentage: 10.0
+
+main-commands:
+  - "hmenu open %player% auctions"
+
+find-command:
+  - "hmenu open %player% find"
+
+similar-items-commands:
+  - "hmenu open %player% auction/page_main/similar_items/example-search-item"
+
+on-create-commands:
+  - "broadcast &a%player% has listed %amount%x %item_name% for %price% %currency%"
+
+blacklisted-items:
+  - "TURTLE_SCUTE"
+  - "STONE"
+  - "PAPER:23145"
+
+listing-cancel:
+  enabled: true
+  window-seconds: 30
+
+refresh-interval: 20
+
+expiration-time:
+  "default":
+    permissions:
+      "group-default": true
+    time: 86400000
+  "premium":
+    permissions:
+      "group-premium": true
+    time: 172800000
+  "premiumplus":
+    permissions:
+      "group-premiumplus": true
+    time: 259200000
+
+premium-slots:
+  enabled: true
+  max-slots: 6
+  price: 1000
+  currency: "argent"
+  duration: 86400
+  messages:
+    notify-both-player-and-console: true
+    log-premium-actions: true
+
+seller-notifications:
+  enabled: true
+  message:
+    include-enchantments: false
+    show-tax-info: false
+
+reconnection-sales-summary:
+  enabled: true
+  minimum-offline-time: 60
+  max-items-shown: 5
+  delay-ticks: 20
+
+messages:
+  # Args: {0}=Buyer, {1}=ItemName, {2}=ItemDisplayName, {3}=Amount, {4}=Price
+  seller-notification-format: "<dark_green><bold>✔ <green>Vous venez de vendre votre <white>{1} <dark_gray>(<gray>x{3}<dark_gray>) <green>à <yellow>{0} <green>pour <yellow>{4}$ <green>à l'hôtel des ventes !"
+  # Args: {0}=totalItems, {1}=totalEarnings, {2}=offlineTime
+  reconnection-sales-summary-header: "<gold><bold>Dernière ventes:"
+  # Args: {0}=Buyer, {1}=ItemName, {2}=Amount, {3}=Price, {4}=TimeAgo
+  reconnection-sales-summary-item: "<gray>▪ <yellow>{0} <white>vous a acheté <gray>{1} <dark_gray>(<gray>x{2}<dark_gray>) <white>pour <yellow>{3}$ <dark_gray>(<gray>Il y a {4}<dark_gray>)"
+  # Args: {0}=Remaining, {1}=TotalItems, {2}=TotalEarnings
+  reconnection-sales-summary-footer: "<white>Gain total: <yellow>{2}$"
+  reconnection-sales-summary-no-sales: "<dark_red><bold>✘ <red>Vous n'avez vendu aucun objets dans l'Hôtel des Ventes durant votre absence !"
+  player-not-exist: "<dark_red><bold>✘ <red>Ce joueur n'existe pas."
+  invalid-arguments: "<dark_red><bold>✘ <red>Argument de commande invalide."
+  success-player-banned: "<dark_green><bold>✔ <green>Joueur suspendu de l'HDV avec succès."
+  your-are-banned: "<dark_red><bold>✘<red>Vous êtes banni de l'HDV."
+  no-context: "<dark_red><bold>✘ <red>This player does not have a context (open menu)."
+  sale-not-exist: "<dark_red><bold>✘ <red>Cet objet n'existe plus."
+  cannot-buy-own: "<dark_red><bold>✘ <red>Vous ne pouvez pas acheter votre propre objet"
+  sale-expired: "<dark_red><bold>✘ <red>Cet objet a expiré."
+  not-enough-money: "<dark_red><bold>✘ <red>Vous n'avez pas assez d'argent pour acheter cet objet."
+  already-bought: "<dark_red><bold>✘ <red>Cet objet a déjà été acheté."
+  purchase-success: "<green>Vous avez acheté un objet."
+  invalid-auction-id: "<dark_red><bold>✘ <red>HDV invalide."
+  success-auction-expired: "<dark_red><bold>✘ <red>Cet objet a expiré. (AH2)"
+  invalid-type: "<dark_red><bold>✘ <red>Invalid type '{0}'."
+  search-set: ""
+  sales-limit-reached: "<dark_red><bold>✘ <red>Limite de ventes atteinte, débloquez-en davantage avec le rang Premium. <gray>/premium"
+  invalid-currency: "<dark_red><bold>✘ <red>Erreur lors de la mise en vente."
+  minimum-price: "<dark_red><bold>✘ <red>Le prix minimum pour un objet dans l'hôtel des ventes est de <yellow>{0}$<red>."
+  maximum-price: "<dark_red><bold>✘ <red>Le prix maximum est {0}."
+  no-item-in-hand: "<dark_red><bold>✘ <red>Veuillez avoir l'objet en main pour le mettre en vente."
+  item-not-allowed: "<dark_red><bold>✘ <red>Cet objet n'est pas autorisé à la vente dans l'hôtel des ventes !"
+  # Args: {0}=Name, {1}=Amount, {2}=Price, {3}=ClickCommand
+  success-item-sold: "<dark_green><bold>✔ <green>Vous avez mis en vente avec succès <yellow>{0} <dark_gray>(<gray>{1}<dark_gray>) <green>pour <yellow>{2}$ <green>! <gray>/ah cancel pour <red>{3}"
+  player-not-banned: "<dark_red><bold>✘ <red>Ce joueur n'est pas banni."
+  player-unbanned: "<dark_green><bold>✔ <green>Le joueur est débanni."
+  # Args: {0}=Amount, {1}=Name
+  success-withdraw: "<dark_green><bold>✔ <green>Vous avez retiré {0}x {1} <reset><green>avec succès!"
+  transaction-history-title: "<green><bold>Vos transactions récentes :"
+  # Args: {0}=ItemName, {1}=Amount, {2}=Buyer, {3}=Price, {4}=Date
+  transaction-format-sold-format: "<gray>- Vous avez vendu <yellow>{0} <gray>(x<white>{1}<gray>) à <yellow>{2} <gray>pour <yellow>{3}$ <gray>le <white>{4}"
+  # Args: {0}=ItemName, {1}=Amount, {2}=Seller, {3}=Price, {4}=Date
+  transaction-format-bought-format: "<gray>- Vous avez acheté <yellow>{0} <gray>(x<white>{1}<gray>) à <yellow>{2} <gray>pour <yellow>{3}$ <gray>le <white>{4}"
+  player-only-command: "<dark_red><bold>✘ <red>You must be a player to execute this command."
+  no-transaction: "<dark_red><bold>✘ <red>Aucune transaction trouvée."
+  # Args: {0}=Player
+  no-transaction-for-player: "<dark_red><bold>✘ <red>Aucune transaction trouvée pour {0}."
+  # Args: {0}=Player
+  transaction-history-title-for-player: "<green><bold>Transactions récentes de {0} :"
+  history-usage: "<red>Usage: /ah history <pseudo>"
+  history-permission-denied: "<dark_red><bold>✘ <red>Vous n'avez pas la permission de faire cela."
+  # Args: {0}=Slot, {1}=Price, {2}=Currency, {3}=Amount, {4}=Name
+  premium-promotion-success: "<dark_green><bold>✔ <green>Votre enchère a été promue dans l'emplacement premium n°{0} pour {1} <white>{2} !"
+  premium-promotion-failed: "<dark_red><bold>✘ <red>Échec de la promotion de l'enchère en emplacement premium."
+  premium-no-slots-available: ""
+  # Args: {0}=Required, {1}=Currency, {2}=Balance
+  premium-insufficient-funds: "<dark_red><bold>✘ <red>Fonds insuffisants. Il vous faut {0} <white>{1} <red>mais vous n'avez que {2} <white>{1} <red>."
+  premium-already-premium: "<dark_red><bold>✘ <red>Cette enchère est déjà dans un emplacement premium."
+  premium-expired-item: "<dark_red><bold>✘ <red>Impossible de promouvoir des enchères expirées en slot premium."
+  premium-duration-info: "<gray>Durée de la mise en avant : <yellow>24 heures"
+  # Args: {0}=Name, {1}=Amount, {2}=Price
+  purchase-success-delivered-to-inventory: "<dark_green><bold>✔ <green>Vous venez d'acheter <white>{0} <dark_gray>(<gray>x{1}<dark_gray>) <green>pour <yellow>{2}$<green>. Cet objet est directement disponible dans votre inventaire"
+  # Args: {0}=Name, {1}=Amount, {2}=Price
+  purchase-success-added-to-bought-items: "<dark_green><bold>✔</bold> <green>Vous venez d'acheter <white>{0} <dark_gray>(<gray>x{1}<dark_gray>) <green>pour <yellow>{2}$<green>. Votre inventaire étant plein, l'objet a été placé dans vos achats. <gray>/hdva pour </gray><click:run_command:'/hdva'><hover:show_text:'<green>Clique ici pour récupérer vos achats</green>'><green>[Récupérer l'objet]</green></hover></click>"
+  reconnection-sales-summary-header: "<gold><bold>Dernière ventes:"
+  # Args: {0}=Buyer, {1}=ItemName, {2}=Amount, {3}=Price, {4}=TimeAgo
+  reconnection-sales-summary-item: "<gray>▪ <yellow>{0} <white>vous a acheté <gray>{1} <dark_gray>(<gray>x{2}<dark_gray>) <white>pour <yellow>{3}$ <dark_gray>(<gray>Il y a {4}<dark_gray>)"
+  # Args: {0}=TotalEarnings
+  reconnection-sales-summary-footer: "<white>Gain total: <yellow>{0}$"
+  reconnection-sales-summary-no-sales: "<dark_red><bold>✘ <red>Vous n'avez vendu aucun objets dans l'Hôtel des Ventes durant votre absence !"
+  sell-usage: "<yellow>Utilisation: /ah sell <prix>"
+  sell-missing-price: "<red>Vous devez entrer un prix."
+  sell-invalid-number: "<red>Nombre invalide. Utilisez des chiffres, '.' ou ','."
+  # Args: {0}=Min, {1}=Max
+  sell-out-of-range: "<red>Le prix doit être compris entre {0} et {1}."
+  sell-blacklisted: "<red>Cet objet ne peut pas être mis en vente."
+  sell-item-changed: "<red>L'objet que vous tenez a changé. Vente annulée."
+  sell-input-canceled: "<gray>Saisie annulée."
+  sell-sign-unavailable: "<red>Saisie du prix indisponible. Veuillez spécifier un prix."
+  sell-auction-house-full: "<red>La maison de vente aux enchères est actuellement pleine. Réessayez plus tard."
+  sell-currency-not-allowed: "<red>Vous ne pouvez pas utiliser cette monnaie."
+  item-durability-too-low: "<dark_red><bold>✘ <red>L'objet que vous essayez de vendre est trop endommagé."
+  cancel-disabled: "<dark_red><bold>✘ <red>Le délai d’annulation a expiré, utilisez l’onglet <yellow>Vos objets en ventes <red>si vous souhaitez annuler une vente récente."
+  cancel-nothing-to-cancel: "<dark_red><bold>✘ <red>Le délai d’annulation a expiré, utilisez l’onglet <yellow>Vos objets en ventes <red>si vous souhaitez annuler une vente récente."
+  cancel-already-sold: "<dark_red><bold>✘ <red>L’objet que vous tentez de récupérer a déjà été vendu."
+  cancel-success: "<dark_green><bold>✔ <green>Vous venez d’annuler votre dernière vente, par conséquent l’objet vous a été restitué dans l’inventaire."
+  notification:
+    sold:
+      format: "<dark_green><bold>✔ <green>Vous venez de vendre votre <white>{1} <dark_gray>(<gray>x{3}<dark_gray>) <green>à <yellow>{0} <green>pour <yellow>{4}$ <green>à l'hôtel des ventes !"
+  command:
+    sign-search:
+      disabled: "<red>Sign search is currently disabled."
+      error: "<red>Erreur lors de la recherche."
+      gui-error: "<dark_red><bold>✘ <red>Erreur lors de l'ouverture de la recherche par panneau."
+      no-search-term: "<dark_red><bold>✘ <red>Veuillez entrer un terme de recherche!"
+      # Args: {0}=Search
+      search-success: "<dark_green><bold>✔ <green>Recherche effectuée pour: <yellow>{0}"
+      search-filter-cleared: "<dark_green><bold>✔ <green>Votre recherche a été réinitialisée."
+      no-results: "<dark_red><bold>✘ <red>Aucun objet trouvé pour: <white>{0}"
+      # Args: {0}=Search
+      multiple-results-header: "<gold>Plusieurs objets trouvés pour: <white>{0}"
+      # Args: {0}=FrenchName, {1}=Material
+      multiple-results-item: "<gray>- <yellow>{0} <gray>(<white>{1}<gray>)"
+      multiple-results-more: "<gray>... et {0} autres"
+      multiple-results-footer: "<gray>Soyez plus précis dans votre recherche."
+    premium:
+      usage: "<red>Usage: /ah premium <player> [auctionId]"
+      # Args: {0}=PlayerName
+      player-not-found: "<dark_red><bold>✘ <red>Joueur {0} introuvable."
+      # Args: {0}=PlayerName
+      no-target: "<dark_red><bold>✘ <red>{0} ne regarde aucune enchère."
+      invalid-auction-id: "<dark_red><bold>✘ <red>ID d'enchère invalide."
+      # Args: {0}=PlayerName, {1}=AuctionId
+      auction-not-found: "<dark_red><bold>✘ <red>Aucune enchère trouvée pour {0} avec l'ID {1}."
+      already-premium: "<dark_red><bold>✘ <red>Cette enchère est déjà Premium."
+      expired: "<dark_red><bold>✘ <red>Cette enchère a expiré."
+      no-slots: "<dark_red><bold>✘ <red>Aucun emplacement Premium disponible."
+      currency-not-found: "<dark_red><bold>✘ <red>Devise Premium introuvable."
+      promotion-failed: "<dark_red><bold>✘ <red>Échec de la promotion."
+      # Args: {0}=TargetPlayer, {1}=Slot
+      promotion-success: "<dark_green><bold>✔ <green>Promotion réussie pour {0} (slot {1})."
+
+gui:
+  sign-search:
+    line1: "<bold>RECHERCHE"
+    line2: "Tapez le nom"
+    line3: "de l'objet"
+  sign-input:
+    java:
+      line1: "<bold>PRIX"
+      line2: "Entrez un"
+      line3: "montant"
+  history:
+    title-buys: "Historique des achats"
+    title-sells: "Historique des ventes"
+    tab:
+      buys-name: "<green><bold>Buys"
+      sells-name: "<gold><bold>Sells"
+      template:
+        display-name: "<#ffe400><bold>Trier"
+        lore:
+          - ""
+          - "<gray>Filtres disponibles:"
+          # Args: {0}=BulletBuy, {1}=BuyLabel
+          - "{0}{1}"
+          # Args: {0}=BulletSell, {1}=SellLabel
+          - "{2}{3}"
+          - ""
+          - "<gray>ᴄʟɪᴄ ɢᴀᴜᴄʜᴇ ▸<white> ꜰɪʟᴛʀᴇ ѕᴜɪᴠᴀɴᴛ"
+        labels:
+          buy: "Achats"
+          sell: "Ventes"
+    nav:
+      previous-name: "<#ffe400><bold>Page Précédente"
+      first-page-name: "<red><bold>Retour"
+      first-page-lore: 
+        - "" 
+        - "<gray>ᴄʟɪᴄ ɢᴀᴜᴄʜᴇ ▸<white> ʀᴇᴛᴏᴜʀ"
+      next-name: "<#ffe400><bold>Page Suivante"
+      close-name: "<red><bold>Fermer"
+    entry:
+      name: "<white>{0} <dark_gray>(<gray>x{1}<dark_gray>)"
+      lore-buys:
+        - " "
+        # Args: {0}=Date, {1}=Price, {2}=Seller
+        - "<#ffc700>⏳ <white>Date: <#ffc700>{0}"
+        - "<yellow><bold>$ <white>Prix: <yellow>{1}$"
+        - "<#FD83FF>👤 <white>Vendeur: <#FD83FF>{2}"
+        - " "
+      lore-sells:
+        - " "
+        # Args: {0}=Date, {1}=Price, {2}=Buyer
+        - "<#ffc700>⏳ <white>Date: <#ffc700>{0}"
+        - "<yellow><bold>$ <white>Prix: <yellow>{1}$"
+        - "<#FD83FF>👤 <white>Acheteur: <#FD83FF>{2}"
+        - " "
+
+close-button:
+  slot: 49
+  material: "BARRIER"
+  name: "<#ffe400><bold>Fermer"
+  lore:
+    - " "
+    - "<gray>ᴄʟɪᴄ ɢᴀᴜᴄʜᴇ ▸ <white>ᴀᴄᴄᴇᴅᴇʀ"

@@ -1,0 +1,101 @@
+metadata: {}
+messages:
+  # General Messages
+  player-not-exist: "&cThis player does not exist."
+  invalid-arguments: "&cInvalid arguments."
+  invalid-command: "&cInvalid command."
+  no-permission: "&cYou don't have permission to do this."
+
+  # Ban Messages
+  success-player-banned: "&aPlayer has been banned from the auction house."
+  your-are-banned: "&cYou are banned from the auction house."
+  player-not-banned: "&cThis player is not banned."
+  player-unbanned: "&aPlayer has been unbanned from the auction house."
+
+  # Context Messages
+  no-context: "&cNo auction context found."
+  sale-not-exist: "&cThis sale does not exist."
+  cannot-buy-own: "&cYou cannot buy your own items."
+  sale-expired: "&cThis sale has expired."
+
+  # Money Messages
+  not-enough-money: "&cYou don't have enough money to buy this item."
+  not-enough-money-sell: "&cYou don't have enough money to list this item."
+
+  # Purchase Messages
+  already-bought: "&cThis item has already been bought."
+  purchase-success: "&aYou successfully purchased the item for &f{0}&a!"
+  purchase-success-delivered-to-inventory: "&aItem delivered to your inventory."
+  purchase-success-added-to-bought-items: "&aItem added to your purchased items. Use &f/ah back &ato retrieve it."
+
+  # Auction Messages
+  invalid-auction-id: "&cInvalid auction ID."
+  success-auction-expired: "&aAuction has been expired successfully."
+
+  # Item Messages
+  invalid-type: "&cThis item type is not allowed: {0}"
+  item-durability-too-low: "&cThis item's durability is too low to sell."
+
+  # Search Messages
+  search-set: "&aSearch filter set: &f{0}"
+  search-filter-cleared: "&aSearch filter cleared."
+
+  # Sell Messages
+  sales-limit-reached: "&cYou have reached your sales limit."
+  invalid-currency: "&cInvalid currency."
+  minimum-price: "&cThe minimum price is &f{0}&c."
+  maximum-price: "&cThe maximum price is &f{0}&c."
+  no-item-in-hand: "&cYou must hold an item in your hand."
+  item-not-allowed: "&cThis item is not allowed in the auction house."
+  sell-usage: "&eUsage: &f/ah sell <price>"
+  sell-missing-price: "&cPlease specify a price."
+  sell-invalid-number: "&cInvalid price. Please enter a valid number."
+  sell-out-of-range: "&cPrice is out of the allowed range."
+  sell-blacklisted: "&cThis item is blacklisted and cannot be sold."
+  sell-item-changed: "&cYour held item changed during the listing process."
+  sell-input-canceled: "&eSale input canceled."
+  sell-sign-unavailable: "&cSign input is currently unavailable."
+  sell-auction-house-full: "&cThe auction house is full. Try again later."
+  sell-currency-not-allowed: "&cThis currency is not allowed for selling."
+  success-item-sold: "&aItem listed successfully for &f{0}&a!"
+  success-withdraw: "&aItem withdrawn successfully."
+
+  # Transaction History Messages
+  transaction-history-title: "&6&l=== Your Transaction History ==="
+  transaction-history-title-for-player: "&6&l=== Transaction History for {0} ==="
+  transaction-format: "&7{0} &8- &f{1} &8- &a{2}"
+  no-transaction: "&eYou have no transaction history."
+  no-transaction-for-player: "&eThis player has no transaction history."
+  transaction-format-bought-format: "&7{0} &8- &aBought &f{1} &7from &f{2} &7for &a{3}"
+  transaction-format-sold-format: "&7{0} &8- &eSold &f{1} &7to &f{2} &7for &a{3}"
+
+  # History Messages
+  history-permission-denied: "&cYou don't have permission to view other players' history."
+  history-usage: "&eUsage: &f/ah history [player]"
+
+  # Player Only
+  player-only-command: "&cThis command can only be used by players."
+
+  # Premium Slot Messages
+  premium-promotion-success: "&aItem promoted to premium slot!"
+  premium-promotion-failed: "&cFailed to promote item to premium slot."
+  premium-no-slots-available: "&cNo premium slots available."
+  premium-insufficient-funds: "&cYou don't have enough money for premium promotion."
+  premium-already-premium: "&cThis item is already in a premium slot."
+  premium-expired-item: "&cCannot promote an expired item."
+  premium-duration-info: "&ePremium duration: &f{0}"
+
+  # Seller Notifications
+  seller-item-sold-notification: "&a[Auction] &fYour &e{0} &fwas sold for &a{1} &fto &e{2}&f!"
+
+  # Reconnection Sales Summary
+  reconnection-sales-summary-header: "&6&l=== Sales While You Were Away ==="
+  reconnection-sales-summary-item: "&7- &f{0} &7sold for &a{1} &7to &f{2}"
+  reconnection-sales-summary-footer: "&6&lTotal: &a{0}"
+  reconnection-sales-summary-no-sales: "&7No items were sold while you were away."
+
+  # Listing Cancel Messages
+  cancel-disabled: "&cCanceling listings is currently disabled."
+  cancel-nothing-to-cancel: "&cYou have no listings to cancel."
+  cancel-already-sold: "&cThis item has already been sold."
+  cancel-success: "&aListing canceled. Item returned to your inventory."

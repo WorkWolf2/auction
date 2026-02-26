@@ -1,0 +1,280 @@
+# Potion Translation Configuration
+# This file allows customization of potion display properties including:
+# - Color formatting (hex codes, color names, or formatting codes)
+# - Display name translations/aliases for potion effects
+# - Text styling options (bold, italic, underline, etc.)
+
+# Global settings for potion display
+settings:
+  # Default color when no specific color is defined
+  default-color: "&7"
+  # Default text styles (empty list means no styling)
+  default-style: []
+  # Separator between potion name and level/duration info
+  level-separator: " "
+  # Whether to show level I (1) for potions
+  show-level-one: false
+  # Whether to fall back to the potion type name if translation is missing
+  fallback-to-key: true
+  # Level formatting: "roman" (I, II, III), "arabic" (1, 2, 3), or "custom"
+  default-level-format: "roman"
+  # Whether to show duration information
+  show-duration: true
+  # Whether to show extended/upgraded info
+  show-modifiers: true
+
+# Potion effect translations
+potions:
+  # Beneficial effects
+  speed:
+    display-name: "Rapidité"
+    color: "#7CAFC2"
+    style: ["bold"]
+    level-format: "roman"
+  
+  slowness:
+    display-name: "Lenteur"
+    color: "#5A6C81"
+    style: ["italic"]
+    level-format: "roman"
+  
+  haste:
+    display-name: "Célérité"
+    color: "#D9C043"
+    style: ["bold"]
+    level-format: "roman"
+  
+  mining_fatigue:
+    display-name: "Fatigue"
+    color: "#4A4217"
+    style: ["italic"]
+    level-format: "roman"
+  
+  strength:
+    display-name: "Force"
+    color: "#932423"
+    style: ["bold"]
+    level-format: "roman"
+  
+  instant_health:
+    display-name: "Soin instantané"
+    color: "#F82423"
+    style: ["bold"]
+    level-format: "roman"
+  
+  instant_damage:
+    display-name: "Dégâts instantanés"
+    color: "#430A09"
+    style: ["bold"]
+    level-format: "roman"
+  
+  jump_boost:
+    display-name: "Saut amélioré"
+    color: "#22FF4C"
+    style: ["italic"]
+    level-format: "roman"
+  
+  nausea:
+    display-name: "Nausée"
+    color: "#551D4A"
+    style: ["italic"]
+    level-format: "roman"
+  
+  regeneration:
+    display-name: "Régénération"
+    color: "#CD5CAB"
+    style: ["bold"]
+    level-format: "roman"
+  
+  resistance:
+    display-name: "Résistance"
+    color: "#99453A"
+    style: ["bold"]
+    level-format: "roman"
+  
+  fire_resistance:
+    display-name: "Résistance au feu"
+    color: "#E49A3A"
+    style: ["bold"]
+    level-format: "roman"
+  
+  water_breathing:
+    display-name: "Respiration aquatique"
+    color: "#2E5266"
+    style: ["italic"]
+    level-format: "roman"
+  
+  invisibility:
+    display-name: "Invisibilité"
+    color: "#7F8392"
+    style: ["italic"]
+    level-format: "roman"
+  
+  blindness:
+    display-name: "Cécité"
+    color: "#1F1F23"
+    style: ["italic"]
+    level-format: "roman"
+  
+  night_vision:
+    display-name: "Vision nocturne"
+    color: "#1F1FA1"
+    style: ["bold"]
+    level-format: "roman"
+  
+  hunger:
+    display-name: "Faim"
+    color: "#587653"
+    style: ["italic"]
+    level-format: "roman"
+  
+  weakness:
+    display-name: "Faiblesse"
+    color: "#484D48"
+    style: ["italic"]
+    level-format: "roman"
+  
+  poison:
+    display-name: "Poison"
+    color: "#4E9331"
+    style: ["bold"]
+    level-format: "roman"
+  
+  wither:
+    display-name: "Wither"
+    color: "#352A27"
+    style: ["bold"]
+    level-format: "roman"
+  
+  health_boost:
+    display-name: "Boost de vie"
+    color: "#F87D23"
+    style: ["bold"]
+    level-format: "roman"
+  
+  absorption:
+    display-name: "Absorption"
+    color: "#2552A5"
+    style: ["bold"]
+    level-format: "roman"
+  
+  saturation:
+    display-name: "Saturation"
+    color: "#F82421"
+    style: ["bold"]
+    level-format: "roman"
+  
+  # 1.9+ effects
+  glowing:
+    display-name: "Surbrillance"
+    color: "#94A061"
+    style: ["italic"]
+    level-format: "roman"
+  
+  levitation:
+    display-name: "Lévitation"
+    color: "#CEFFFF"
+    style: ["italic"]
+    level-format: "roman"
+  
+  luck:
+    display-name: "Chance"
+    color: "#339900"
+    style: ["bold"]
+    level-format: "roman"
+  
+  bad_luck:
+    display-name: "Malchance"
+    color: "#C0A44D"
+    style: ["italic"]
+    level-format: "roman"
+  
+  # 1.13+ effects
+  slow_falling:
+    display-name: "Chute lente"
+    color: "#F7F8E0"
+    style: ["italic"]
+    level-format: "roman"
+  
+  conduit_power:
+    display-name: "Puissance des conduits"
+    color: "#1DC2D1"
+    style: ["bold"]
+    level-format: "roman"
+  
+  dolphins_grace:
+    display-name: "Grâce du dauphin"
+    color: "#88A3A6"
+    style: ["italic"]
+    level-format: "roman"
+  
+  # 1.14+ effects
+  bad_omen:
+    display-name: "Mauvais présage"
+    color: "#0B6138"
+    style: ["bold"]
+    level-format: "roman"
+  
+  hero_of_the_village:
+    display-name: "Héros du village"
+    color: "#44A12D"
+    style: ["bold"]
+    level-format: "roman"
+  
+  # 1.19+ effects
+  darkness:
+    display-name: "Ténèbres"
+    color: "#292929"
+    style: ["bold"]
+    level-format: "roman"
+  
+  # Base potion types (for non-effect potions)
+  water:
+    display-name: "Eau"
+    color: "&b"
+    style: []
+    level-format: "roman"
+  
+  mundane:
+    display-name: "Potion banale"
+    color: "&7"
+    style: []
+    level-format: "roman"
+  
+  thick:
+    display-name: "Potion épaisse"
+    color: "&7"
+    style: []
+    level-format: "roman"
+  
+  awkward:
+    display-name: "Potion étrange"
+    color: "&7"
+    style: []
+    level-format: "roman"
+  
+  uncraftable:
+    display-name: "Non-craftable"
+    color: "&c"
+    style: ["italic"]
+    level-format: "roman"
+
+# Modifier translations
+modifiers:
+  extended: "Prolongée"
+  upgraded: "Renforcée"
+  splash: "Éclaboussure"
+  lingering: "Persistante"
+
+# Custom level formats (when level-format is set to "custom")
+custom-levels:
+  1: "I"
+  2: "II"
+  3: "III"
+  4: "IV"
+  5: "V"
+  6: "VI"
+  7: "VII"
+  8: "VIII"
+  9: "IX"
+  10: "X"

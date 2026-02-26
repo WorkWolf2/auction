@@ -1,0 +1,7 @@
+currencies:
+  default:
+    counter: "argent"
+    name: "Argent"
+  credits:
+    counter: "credits"
+    name: "Crédits"

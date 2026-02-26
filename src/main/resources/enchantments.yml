@@ -1,0 +1,266 @@
+# Enchantment Translation Configuration for HypingAuctions
+# This file allows customization of enchantment display properties including:
+# - Color formatting (hex codes, color names, or formatting codes)
+# - Display name translations/aliases
+# - Text styling options (bold, italic, underline, etc.)
+
+# Global settings for enchantment display
+settings:
+  # Default color when no specific color is defined
+  default-color: "&7"
+  # Default text styles when no specific styles are defined
+  default-style: []
+  # Separator between enchantment name and level
+  level-separator: " "
+  # Whether to show level I (1) for enchantments
+  show-level-one: false
+  # Whether to fall back to the enchantment key name if no translation is found
+  fallback-to-key: true
+  # Level formatting: "roman" (I, II, III), "arabic" (1, 2, 3), or "custom"
+  default-level-format: "roman"
+
+# Enchantment translations
+enchantments:
+  # Combat enchantments
+  sharpness:
+    display-name: "Tranchant"
+    color: "#FF5555"
+    style: ["bold"]
+    level-format: "roman"
+  
+  smite:
+    display-name: "Châtiment"
+    color: "#FFAA00"
+    style: ["bold"]
+    level-format: "roman"
+  
+  bane_of_arthropods:
+    display-name: "Fléau des arthropodes"
+    color: "#AA5500"
+    style: ["bold"]
+    level-format: "roman"
+  
+  knockback:
+    display-name: "Recul"
+    color: "#5555FF"
+    style: ["italic"]
+    level-format: "roman"
+  
+  fire_aspect:
+    display-name: "Aura de feu"
+    color: "#FF5500"
+    style: ["bold", "italic"]
+    level-format: "roman"
+  
+  looting:
+    display-name: "Butin"
+    color: "#55FF55"
+    style: ["bold"]
+    level-format: "roman"
+  
+  sweeping:
+    display-name: "Balayage"
+    color: "#FFFF55"
+    style: ["italic"]
+    level-format: "roman"
+  
+  # Tool enchantments
+  efficiency:
+    display-name: "Efficacité"
+    color: "#55FFFF"
+    style: ["bold"]
+    level-format: "roman"
+  
+  silk_touch:
+    display-name: "Toucher de soie"
+    color: "#FFFFFF"
+    style: ["italic", "bold"]
+    level-format: "roman"
+  
+  unbreaking:
+    display-name: "Solidité"
+    color: "&a"
+    style: ["italic"]
+    level-format: "roman"
+  
+  fortune:
+    display-name: "Fortune"
+    color: "#FFD700"
+    style: ["bold"]
+    level-format: "roman"
+  
+  # Armor enchantments
+  protection:
+    display-name: "Protection"
+    color: "#5555AA"
+    style: ["bold"]
+    level-format: "roman"
+  
+  fire_protection:
+    display-name: "Protection contre le feu"
+    color: "#FF5555"
+    style: ["bold"]
+    level-format: "roman"
+  
+  feather_falling:
+    display-name: "Chute amortie"
+    color: "#AAAAFF"
+    style: ["italic"]
+    level-format: "roman"
+  
+  blast_protection:
+    display-name: "Protection contre les explosions"
+    color: "#AA5555"
+    style: ["bold"]
+    level-format: "roman"
+  
+  projectile_protection:
+    display-name: "Protection contre les projectiles"
+    color: "#55AA55"
+    style: ["bold"]
+    level-format: "roman"
+  
+  respiration:
+    display-name: "Apnée"
+    color: "#55AAFF"
+    style: ["italic"]
+    level-format: "roman"
+  
+  aqua_affinity:
+    display-name: "Affinité aquatique"
+    color: "#0055FF"
+    style: ["italic"]
+    level-format: "roman"
+  
+  thorns:
+    display-name: "Épines"
+    color: "#AA0055"
+    style: ["bold"]
+    level-format: "roman"
+  
+  depth_strider:
+    display-name: "Agilité aquatique"
+    color: "#0088FF"
+    style: ["italic"]
+    level-format: "roman"
+  
+  frost_walker:
+    display-name: "Semelles givrantes"
+    color: "#AAFFFF"
+    style: ["italic", "bold"]
+    level-format: "roman"
+  
+  # Bow enchantments
+  power:
+    display-name: "Puissance"
+    color: "#FF0000"
+    style: ["bold"]
+    level-format: "roman"
+  
+  punch:
+    display-name: "Frappe"
+    color: "#AA5500"
+    style: ["bold"]
+    level-format: "roman"
+  
+  flame:
+    display-name: "Flamme"
+    color: "#FF5500"
+    style: ["bold", "italic"]
+    level-format: "roman"
+  
+  infinity:
+    display-name: "Infinité"
+    color: "#AA00AA"
+    style: ["bold", "italic"]
+    level-format: "roman"
+  
+  # Fishing enchantments
+  luck_of_the_sea:
+    display-name: "Chance de la mer"
+    color: "#00AAAA"
+    style: ["italic"]
+    level-format: "roman"
+  
+  lure:
+    display-name: "Appât"
+    color: "#55AA00"
+    style: ["italic"]
+    level-format: "roman"
+  
+  # Trident enchantments (1.13+)
+  loyalty:
+    display-name: "Loyauté"
+    color: "#0055AA"
+    style: ["bold"]
+    level-format: "roman"
+  
+  impaling:
+    display-name: "Empalement"
+    color: "#AA0000"
+    style: ["bold"]
+    level-format: "roman"
+  
+  riptide:
+    display-name: "Propulsion"
+    color: "#00AAFF"
+    style: ["bold", "italic"]
+    level-format: "roman"
+  
+  channeling:
+    display-name: "Canalisation"
+    color: "#FFFF00"
+    style: ["bold", "italic"]
+    level-format: "roman"
+  
+  # Crossbow enchantments (1.14+)
+  multishot:
+    display-name: "Tir multiple"
+    color: "#AA5500"
+    style: ["bold"]
+    level-format: "roman"
+  
+  quick_charge:
+    display-name: "Charge rapide"
+    color: "#55FF00"
+    style: ["bold"]
+    level-format: "roman"
+  
+  piercing:
+    display-name: "Perforation"
+    color: "#FFAA00"
+    style: ["bold"]
+    level-format: "roman"
+  
+  # Curse enchantments
+  binding_curse:
+    display-name: "Malédiction de liaison"
+    color: "#AA0000"
+    style: ["bold", "italic"]
+    level-format: "roman"
+  
+  vanishing_curse:
+    display-name: "Malédiction de disparition"
+    color: "#550000"
+    style: ["bold", "italic"]
+    level-format: "roman"
+  
+  # Mending (special)
+  mending:
+    display-name: "Raccommodage"
+    color: "#00FF00"
+    style: ["bold", "italic"]
+    level-format: "roman"
+
+# Custom level formats (when level-format is set to "custom")
+custom-levels:
+  1: "I"
+  2: "II"
+  3: "III"
+  4: "IV"
+  5: "V"
+  6: "VI"
+  7: "VII"
+  8: "VIII"
+  9: "IX"
+  10: "X"

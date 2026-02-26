@@ -1,0 +1,7 @@
+host: 127.0.0.1
+port: 27017
+user: mongodb
+password: azerty
+auth-database: admin
+database: hypingauctions
+uri: "" # optional MongoDB connection string URI (will be prioritized if provided)

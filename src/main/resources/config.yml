@@ -1,0 +1,413 @@
+# Average price cache configuration for performance optimization
+use-template-system: true
+
+debug: true
+average-price-cache:
+  # Cache duration in minutes (how long to keep sold auction data cached)
+  # Higher values = better performance but less up-to-date prices
+  # Lower values = more up-to-date prices but more database queries
+  duration-minutes: 60
+
+on-create-commands: 
+  - "bc ALERT &a%player% has listed %amount%x %item_name% for %price% %currency%"
+
+placeholders:
+  average-price:
+    no-price: "Inconnu"
+
+transaction-history-size: 10
+messages:
+  player-not-exist: "&4&l✘ &cCe joueur n'existe pas."
+  invalid-arguments: "&4&l✘ &cArgument de commande invalide."
+  success-player-banned: "&2&l✔ &aJoueur suspendu de l'HDV avec succès."
+  your-are-banned: "&4&l✘&cVous êtes banni de l'HDV."
+  no-context: "&4&l✘ &cThis player does not have a context (open menu)."
+  sale-not-exist: "&4&l✘ &cCet objet n'existe plus."
+  cannot-buy-own: "&4&l✘ &cVous ne pouvez pas acheter votre propre objet"
+  sale-expired: "&4&l✘ &cCet objet a expiré."
+  not-enough-money: "&4&l✘ &cVous n'avez pas assez d'argent pour acheter cet objet."
+  already-bought: "&4&l✘ &cCet objet a déjà été acheté."
+  purchase-success: "&aVous avez acheté un objet."
+  invalid-auction-id: "&4&l✘ &cHDV invalide."
+  success-auction-expired: "&4&l✘ &cCet objet a expiré. (AH2)"
+  invalid-type: "&4&l✘ &cInvalid type '%type%'."
+  search-set: ""
+  sales-limit-reached: "&4&l✘ &cLimite de ventes atteinte, débloquez-en davantage avec le rang Premium. &7/premium"
+  invalid-currency: "&4&l✘ &cErreur lors de la mise en vente."
+  minimum-price: "&4&l✘ &cLe prix minimum pour un objet dans l'hôtel des ventes est de &e%price%$&c."
+  maximum-price: "&4&l✘ &cLe prix maximum est %price%."
+  no-item-in-hand: "&4&l✘ &cVeuillez avoir l'objet en main pour le mettre en vente."
+  item-not-allowed: "&4&l✘ &cCet objet n'est pas autorisé à la vente dans l'hôtel des ventes !"
+  success-item-sold: "&2&l✔ &aVous avez mis en vente avec succès &e%0% &8(&7%1%&8) &apour &e%2%$ &a! &7/ah cancel pour &c%3%"
+  player-not-banned: "&4&l✘ &cCe joueur n'est pas banni."
+  player-unbanned: "&2&l✔ &aLe joueur est débanni."
+  success-withdraw: "&2&l✔ &aVous avez retiré %amount%x %name% &aavec succès!"
+  transaction-history-title: "§a§lVos transactions récentes :"
+  transaction-format-sold-format: "§7- Vous avez vendu §e%item-name% §7(x§f%amount%§7) à §e%buyer% §7pour §e%price%$ §7le §f%date%"
+  transaction-format-bought-format: "§7- Vous avez acheté §e%item-name% §7(x§f%amount%§7) à §e%seller% §7pour §e%price%$ §7le §f%date%"
+  player-only-command: "&4&l✘ §cYou must be a player to execute this command."
+  no-transaction: "&4&l✘ §cAucune transaction trouvée."
+  no-transaction-for-player: "&4&l✘ §cAucune transaction trouvée pour %player%."
+  transaction-history-title-for-player: "§a§lTransactions récentes de %player% :"
+  history-usage: "§cUsage: /ah history <pseudo>"
+  history-permission-denied: "&4&l✘ §cVous n'avez pas la permission de faire cela."
+  premium-promotion-success: "&2&l✔ &aVotre enchère a été promue dans l'emplacement premium n°{slot} pour {price}&f{currency} !"
+  premium-promotion-failed: "&4&l✘ &cÉchec de la promotion de l'enchère en emplacement premium."
+  premium-no-slots-available: ""
+  premium-insufficient-funds: "&4&l✘ &cFonds insuffisants. Il vous faut {required}&f{currency} &cmais vous n'avez que {balance}&f{currency}&c."
+  premium-already-premium: "&4&l✘ &cCette enchère est déjà dans un emplacement premium."
+  premium-expired-item: "&4&l✘ &cImpossible de promouvoir des enchères expirées en slot premium."
+  premium-duration-info: "&7Durée de la mise en avant : &e24 heures"
+  purchase-success-delivered-to-inventory: "&2&l✔ &aVous venez d'acheter &f%0% &8(&7x%1%&8) &apour &e%2%$&a. Cet objet est directement disponible dans votre inventaire"
+  purchase-success-added-to-bought-items: "<dark_green><bold>✔</bold> <green>Vous venez d'acheter <white>%0% <dark_gray>(<gray>x%1%<dark_gray>) <green>pour <yellow>%2%$<green>. Votre inventaire étant plein, l'objet a été placé dans vos achats. <gray>/hdva pour </gray><click:run_command:'/hdva'><hover:show_text:'<green>Clique ici pour récupérer vos achats</green>'><green>[Récupérer l'objet]</green></hover></click>"
+  reconnection-sales-summary-header: "&6&lDernière ventes:"
+  reconnection-sales-summary-item: "&7▪ &e%buyer% &fvous a acheté &7%item_name% &8(&7x%amount%&8) &fpour &e%price%$ &8(&7Il y a %time_ago%&8)"
+  reconnection-sales-summary-footer: "&fGain total: &e%total_earnings%$"
+  reconnection-sales-summary-no-sales: "&4&l✘ &cVous n'avez vendu aucun objets dans l'Hôtel des Ventes durant votre absence !"
+  sell-usage: "&eUtilisation: /ah sell <prix>"
+  sell-missing-price: "&cVous devez entrer un prix."
+  sell-invalid-number: "&cNombre invalide. Utilisez des chiffres, '.' ou ','."
+  sell-out-of-range: "&cLe prix doit être compris entre %min% et %max%."
+  sell-blacklisted: "&cCet objet ne peut pas être mis en vente."
+  sell-item-changed: "&cL'objet que vous tenez a changé. Vente annulée."
+  sell-input-canceled: "&7Saisie annulée."
+  sell-sign-unavailable: "&cSaisie du prix indisponible. Veuillez spécifier un prix."
+  sell-auction-house-full: "&cLa maison de vente aux enchères est actuellement pleine. Réessayez plus tard."
+  sell-currency-not-allowed: "&cVous ne pouvez pas utiliser cette monnaie."
+  item-durability-too-low: "&4&l✘ &cL'objet que vous essayez de vendre est trop endommagé."
+  cancel-disabled: "&4&l✘ &cLe délai d’annulation a expiré, utilisez l’onglet &eVos objets en ventes &csi vous souhaitez annuler une vente récente."
+  cancel-nothing-to-cancel: "&4&l✘ &cLe délai d’annulation a expiré, utilisez l’onglet &eVos objets en ventes &csi vous souhaitez annuler une vente récente."
+  cancel-already-sold: "&4&l✘ &cL’objet que vous tentez de récupérer a déjà été vendu."
+  cancel-success: "&2&l✔ &aVous venez d’annuler votre dernière vente, par conséquent l’objet vous a été restitué dans l’inventaire."
+
+# Sign search configuration
+sign-search:
+  # Enable/disable the sign search feature
+  enabled: true
+  # Text displayed on the sign GUI (line 0 is the input field)
+  line1: "&lRECHERCHE"
+  line2: "Tapez le nom"
+  line3: "de l'objet"
+  # Messages for search results
+  messages:
+    no-search-term: "&4&l✘ &cVeuillez entrer un terme de recherche!"
+    no-results: "&4&l✘ &cAucun objet trouvé pour: &f%search%"
+    multiple-results-header: "&6Plusieurs objets trouvés pour: &f%search%"
+    multiple-results-item: "&7- &e%french_name% &7(&f%material%&7)"
+    multiple-results-more: "&7... et %count% autres"
+    multiple-results-footer: "&7Soyez plus précis dans votre recherche."
+    search-success: "&2&l✔ &aRecherche effectuée pour: &e%search%"
+    error: "&4&l✘ &cErreur lors de la recherche."
+    gui-error: "&4&l✘ &cErreur lors de l'ouverture de la recherche par panneau."
+    search-filter-cleared: "&2&l✔ &aVotre recherche a été réinitialisée."
+    
+# Sell sign input configuration
+sign-input:
+  enabled: true
+  # Java players prefill lines (line 0 is input; leave it blank)
+  java:
+    line1: "&lPRIX"
+    line2: "Entrez un"
+    line3: "montant"
+  # Floodgate Bedrock players get blank lines to avoid issues
+  bedrock:
+    line1: ""
+    line2: ""
+    line3: ""
+  cancel-keywords: ["cancel", "annuler", "stop"]
+  reopen-on-error: true
+  allow-comma-decimal: true
+  decimal-precision: 2
+
+# Confirmation menu UI (fully configurable)
+confirmation-menu:
+  title: "Confirmation de vente"
+  size: 27
+  preview-slot:
+    slot: 13
+    lore:
+      - ""
+      - "&e&l$ &fPrix: &e%0%$"
+      - "&#f59e0b&l📊 &fPrix moyen: &#fbbf24%1%$"
+      - ""
+      - "&#22D3EE⏳ &fExpiration: &#22D3EE%2%"
+      - "&#22D3EE📦 &fQuantité: &#22D3EE%3%"
+      - ""
+      - "&7ᴄʟɪᴄ ɢᴀᴜᴄʜᴇ ▸ &fᴀᴊᴜѕᴛᴇʀ ʟᴇ ᴘʀɪx"
+  filler:
+    material: "AIR"
+  confirm:
+    slot: 15
+    material: "LIME_DYE"
+    name: "&a&lConfirmer la vente"
+    lore:
+      - ""
+      - "&7Tu t'apprêtes à mettre"
+      - "&7en vente &e%0% &8(&7x%3%&8)"
+      - "&7au prix de &e%1%$ &7!"
+      - ""
+      - "&7Cet objet se vend en"
+      - "&7moyenne à &e%2%$"
+      - "&7dans l'Hôtel des ventes !"
+      - ""
+      - "&7ᴄʟɪᴄ ɢᴀᴜᴄʜᴇ ▸ &fᴠᴇɴᴅʀᴇ"
+    custom-model-data: -1
+  cancel:
+    slot: 11
+    material: "RED_DYE"
+    name: "&c&lAnnuler la vente"
+    lore:
+      - ""
+      - "&7Tu ne veux plus vendre cet objet ?"
+      - ""
+      - "&7ᴄʟɪᴄ ɢᴀᴜᴄʜᴇ ▸&c ᴀɴɴᴜʟᴇʀ"
+  sounds:
+    confirm: "UI_BUTTON_CLICK 1.0 1.0"
+    cancel: "UI_BUTTON_CLICK 1.0 0.8"
+  commands:
+    confirm: []
+    cancel: []
+    
+success-cancel-hint:
+  enabled: true
+  # If %CLICK% is not in the toggled message, this hint line is sent
+  toggle-hint-template: "§7Fais §e/ah cancel §7pour annuler ta mise en vente %CLICK%"
+  # Action word used in hover text
+  action: "annuler"
+  # Clickable label and hover text
+  click-label: "§c[Annuler]"
+  click-hover: "§eClique pour %action% ta vente"
+  # Command to execute when clicking
+  command: "/ah cancel"
+
+menus:
+  auction_list:
+    menu-id: auction_list
+    items-per-page: 45
+    dest-slots:
+      auction-items:
+        - 10
+        - 11
+        - 12
+        - 13
+        - 14
+        - 15
+        - 16
+        - 19
+        - 20
+        - 21
+        - 22
+        - 23
+        - 24
+        - 25
+        - 28
+        - 29
+        - 30
+        - 31
+        - 32
+        - 33
+        - 34
+        - 37
+        - 38
+        - 39
+        - 40
+        - 41
+        - 42
+        - 43
+    template-items:
+      auction-item:
+        slot: 0
+
+  auction:
+    menu-id: auction
+    items-per-page: 45
+    dest-slots:
+      auction-items:
+        - 10
+        - 11
+        - 12
+        - 13
+        - 14
+        - 15
+        - 16
+        - 19
+        - 20
+        - 21
+        - 22
+        - 23
+        - 24
+        - 25
+        - 28
+        - 29
+        - 30
+        - 31
+        - 32
+        - 33
+        - 34
+        - 37
+        - 38
+        - 39
+        - 40
+        - 41
+        - 42
+        - 43
+    template-items:
+      auction-item:
+        slot: 0
+
+  bought:
+    menu-id: bought
+    items-per-page: 45
+    dest-slots:
+      auction-items:
+        - 10
+        - 11
+        - 12
+        - 13
+        - 14
+        - 15
+        - 16
+        - 19
+        - 20
+        - 21
+        - 22
+        - 23
+        - 24
+        - 25
+        - 28
+        - 29
+        - 30
+        - 31
+        - 32
+        - 33
+        - 34
+        - 37
+        - 38
+        - 39
+        - 40
+        - 41
+        - 42
+        - 43
+    template-items:
+      auction-item:
+        slot: 0
+
+  expired:
+    menu-id: expired
+    items-per-page: 45
+    dest-slots:
+      auction-items:
+        - 10
+        - 11
+        - 12
+        - 13
+        - 14
+        - 15
+        - 16
+        - 19
+        - 20
+        - 21
+        - 22
+        - 23
+        - 24
+        - 25
+        - 28
+        - 29
+        - 30
+        - 31
+        - 32
+        - 33
+        - 34
+        - 37
+        - 38
+        - 39
+        - 40
+        - 41
+        - 42
+        - 43
+    template-items:
+      auction-item:
+        slot: 0
+
+  history:
+    menu-id: history
+    items-per-page: 45
+    dest-slots:
+      auction-items:
+        - 10
+        - 11
+        - 12
+        - 13
+        - 14
+        - 15
+        - 16
+        - 19
+        - 20
+        - 21
+        - 22
+        - 23
+        - 24
+        - 25
+        - 28
+        - 29
+        - 30
+        - 31
+        - 32
+        - 33
+        - 34
+        - 37
+        - 38
+        - 39
+        - 40
+        - 41
+        - 42
+        - 43
+    template-items:
+      auction-item:
+        slot: 0
+
+  similar_items:
+    menu-id: similar_items
+    items-per-page: 45
+    dest-slots:
+      auction-items:
+        - 10
+        - 11
+        - 12
+        - 13
+        - 14
+        - 15
+        - 16
+        - 19
+        - 20
+        - 21
+        - 22
+        - 23
+        - 24
+        - 25
+        - 28
+        - 29
+        - 30
+        - 31
+        - 32
+        - 33
+        - 34
+        - 37
+        - 38
+        - 39
+        - 40
+        - 41
+        - 42
+        - 43
+    template-items:
+      auction-item:
+        slot: 0
+
+  sell_confirm:
+    menu-id: sell_confirm
+    dest-slots:
+      preview:
+        - 13
+    template-items:
+      preview-item:
+        slot: 0

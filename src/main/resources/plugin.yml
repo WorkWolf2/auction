@@ -1,0 +1,19 @@
+name: HypingAuctions
+version: '${version}'
+main: fr.hyping.hypingauctions.HypingAuctions
+api-version: '1.20'
+folia-supported: true
+
+depend: [PlaceholderAPI, HypingCounters]
+softdepend:
+  - floodgate
+  - HypingCore
+
+commands:
+  hauctions:
+    description: HypingAuctions command
+    usage: /hauctions help
+    aliases:
+      - auction
+      - hdv
+      - ah

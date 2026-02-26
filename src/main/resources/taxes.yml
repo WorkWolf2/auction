@@ -1,0 +1,16 @@
+taxes:
+  "vip":
+    permissions:
+      "group-vip": true
+      "prestige-10": false
+    5000: 5 # 5% de taxes entre 0 et 5000
+    15000: 7 # 7% de taxes entre 5000 et 15000
+    50000: 10 # 10% de taxes entre 15000 et 50000
+    inf: 15 # 15% de taxes au dessus de 50000
+  "mvp":
+    permissions:
+      "group-mvp": true
+    5000: 3 # 5% de taxes entre 0 et 5000
+    15000: 5 # 7% de taxes entre 5000 et 15000
+    50000: 7 # 10% de taxes entre 15000 et 50000
+    inf: 10 # 15% de taxes au dessus de 50000

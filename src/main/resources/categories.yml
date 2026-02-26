@@ -1,0 +1,11 @@
+items-per-page: 27
+categories:
+  "default":
+    - ALL
+  "blocks":
+    - GRASS_BLOCK
+    - SAND
+    - PAPER
+  "items":
+    - ENDER_PEARL
+    - PAPER: 10000

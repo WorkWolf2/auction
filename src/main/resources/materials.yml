@@ -1,0 +1,251 @@
+# French Material Translations for HypingAuctions
+# This file contains French translations for Minecraft materials
+# Used by the sign-based search system
+
+# Configuration
+settings:
+  # Whether to enable French material translations
+  enabled: true
+  # Whether to use automatic translations from Minecraft's built-in system
+  use-automatic-translations: true
+  # Whether to fallback to English names if French translation is not found
+  fallback-to-english: true
+  # Whether to search is case-sensitive
+  case-sensitive: false
+
+# French material translations
+#
+# AUTOMATIC TRANSLATIONS:
+# When 'use-automatic-translations' is enabled, the system will automatically
+# use Minecraft's built-in French translations via Material.getTranslationKey()
+# and PaperMC's Adventure Component API. This covers 90%+ of materials automatically.
+#
+# MANUAL OVERRIDES:
+# The materials listed below serve as manual overrides for cases where:
+# - Automatic translation is not available
+# - You want custom translations different from Minecraft's defaults
+# - Special items or edge cases need specific handling
+#
+# Format: material_name: "French Translation"
+materials:
+  # Building blocks
+  STONE: "Pierre"
+  COBBLESTONE: "Pierre taillée"
+  MOSSY_COBBLESTONE: "Pierre taillée moussue"
+  DEEPSLATE: "Ardoise des abîmes"
+  COBBLED_DEEPSLATE: "Ardoise des abîmes taillée"
+  GRANITE: "Granit"
+  DIORITE: "Diorite"
+  ANDESITE: "Andésite"
+  DIRT: "Terre"
+  GRASS_BLOCK: "Bloc d'herbe"
+  SAND: "Sable"
+  RED_SAND: "Sable rouge"
+  GRAVEL: "Gravier"
+  CLAY: "Argile"
+  
+  # Wood types
+  OAK_LOG: "Bûche de chêne"
+  BIRCH_LOG: "Bûche de bouleau"
+  SPRUCE_LOG: "Bûche de sapin"
+  JUNGLE_LOG: "Bûche d'acajou"
+  ACACIA_LOG: "Bûche d'acacia"
+  DARK_OAK_LOG: "Bûche de chêne noir"
+  CHERRY_LOG: "Bûche de cerisier"
+  MANGROVE_LOG: "Bûche de palétuvier"
+  BAMBOO_BLOCK: "Bloc de bambou"
+  
+  OAK_PLANKS: "Planches de chêne"
+  BIRCH_PLANKS: "Planches de bouleau"
+  SPRUCE_PLANKS: "Planches de sapin"
+  JUNGLE_PLANKS: "Planches d'acajou"
+  ACACIA_PLANKS: "Planches d'acacia"
+  DARK_OAK_PLANKS: "Planches de chêne noir"
+  CHERRY_PLANKS: "Planches de cerisier"
+  MANGROVE_PLANKS: "Planches de palétuvier"
+  BAMBOO_PLANKS: "Planches de bambou"
+  
+  # Ores and minerals
+  COAL_ORE: "Minerai de charbon"
+  IRON_ORE: "Minerai de fer"
+  GOLD_ORE: "Minerai d'or"
+  DIAMOND_ORE: "Minerai de diamant"
+  EMERALD_ORE: "Minerai d'émeraude"
+  LAPIS_ORE: "Minerai de lapis-lazuli"
+  REDSTONE_ORE: "Minerai de redstone"
+  COPPER_ORE: "Minerai de cuivre"
+  
+  DEEPSLATE_COAL_ORE: "Minerai de charbon des abîmes"
+  DEEPSLATE_IRON_ORE: "Minerai de fer des abîmes"
+  DEEPSLATE_GOLD_ORE: "Minerai d'or des abîmes"
+  DEEPSLATE_DIAMOND_ORE: "Minerai de diamant des abîmes"
+  DEEPSLATE_EMERALD_ORE: "Minerai d'émeraude des abîmes"
+  DEEPSLATE_LAPIS_ORE: "Minerai de lapis-lazuli des abîmes"
+  DEEPSLATE_REDSTONE_ORE: "Minerai de redstone des abîmes"
+  DEEPSLATE_COPPER_ORE: "Minerai de cuivre des abîmes"
+  
+  # Raw materials
+  COAL: "Charbon"
+  RAW_IRON: "Fer brut"
+  RAW_GOLD: "Or brut"
+  RAW_COPPER: "Cuivre brut"
+  DIAMOND: "Diamant"
+  EMERALD: "Émeraude"
+  LAPIS_LAZULI: "Lapis-lazuli"
+  REDSTONE: "Poudre de redstone"
+  
+  # Ingots
+  IRON_INGOT: "Lingot de fer"
+  GOLD_INGOT: "Lingot d'or"
+  COPPER_INGOT: "Lingot de cuivre"
+  NETHERITE_INGOT: "Lingot de netherite"
+  
+  # Tools
+  WOODEN_SWORD: "Épée en bois"
+  STONE_SWORD: "Épée en pierre"
+  IRON_SWORD: "Épée en fer"
+  GOLDEN_SWORD: "Épée en or"
+  DIAMOND_SWORD: "Épée en diamant"
+  NETHERITE_SWORD: "Épée en netherite"
+  
+  WOODEN_PICKAXE: "Pioche en bois"
+  STONE_PICKAXE: "Pioche en pierre"
+  IRON_PICKAXE: "Pioche en fer"
+  GOLDEN_PICKAXE: "Pioche en or"
+  DIAMOND_PICKAXE: "Pioche en diamant"
+  NETHERITE_PICKAXE: "Pioche en netherite"
+  
+  WOODEN_AXE: "Hache en bois"
+  STONE_AXE: "Hache en pierre"
+  IRON_AXE: "Hache en fer"
+  GOLDEN_AXE: "Hache en or"
+  DIAMOND_AXE: "Hache en diamant"
+  NETHERITE_AXE: "Hache en netherite"
+  
+  WOODEN_SHOVEL: "Pelle en bois"
+  STONE_SHOVEL: "Pelle en pierre"
+  IRON_SHOVEL: "Pelle en fer"
+  GOLDEN_SHOVEL: "Pelle en or"
+  DIAMOND_SHOVEL: "Pelle en diamant"
+  NETHERITE_SHOVEL: "Pelle en netherite"
+  
+  WOODEN_HOE: "Houe en bois"
+  STONE_HOE: "Houe en pierre"
+  IRON_HOE: "Houe en fer"
+  GOLDEN_HOE: "Houe en or"
+  DIAMOND_HOE: "Houe en diamant"
+  NETHERITE_HOE: "Houe en netherite"
+  
+  # Armor
+  LEATHER_HELMET: "Casque en cuir"
+  LEATHER_CHESTPLATE: "Plastron en cuir"
+  LEATHER_LEGGINGS: "Jambières en cuir"
+  LEATHER_BOOTS: "Bottes en cuir"
+  
+  CHAINMAIL_HELMET: "Casque en cotte de mailles"
+  CHAINMAIL_CHESTPLATE: "Plastron en cotte de mailles"
+  CHAINMAIL_LEGGINGS: "Jambières en cotte de mailles"
+  CHAINMAIL_BOOTS: "Bottes en cotte de mailles"
+  
+  IRON_HELMET: "Casque en fer"
+  IRON_CHESTPLATE: "Plastron en fer"
+  IRON_LEGGINGS: "Jambières en fer"
+  IRON_BOOTS: "Bottes en fer"
+  
+  GOLDEN_HELMET: "Casque en or"
+  GOLDEN_CHESTPLATE: "Plastron en or"
+  GOLDEN_LEGGINGS: "Jambières en or"
+  GOLDEN_BOOTS: "Bottes en or"
+  
+  DIAMOND_HELMET: "Casque en diamant"
+  DIAMOND_CHESTPLATE: "Plastron en diamant"
+  DIAMOND_LEGGINGS: "Jambières en diamant"
+  DIAMOND_BOOTS: "Bottes en diamant"
+  
+  NETHERITE_HELMET: "Casque en netherite"
+  NETHERITE_CHESTPLATE: "Plastron en netherite"
+  NETHERITE_LEGGINGS: "Jambières en netherite"
+  NETHERITE_BOOTS: "Bottes en netherite"
+  
+  # Food
+  APPLE: "Pomme"
+  GOLDEN_APPLE: "Pomme dorée"
+  ENCHANTED_GOLDEN_APPLE: "Pomme dorée enchantée"
+  BREAD: "Pain"
+  WHEAT: "Blé"
+  CARROT: "Carotte"
+  POTATO: "Pomme de terre"
+  BAKED_POTATO: "Pomme de terre cuite"
+  BEETROOT: "Betterave"
+  SUGAR_CANE: "Canne à sucre"
+  SUGAR: "Sucre"
+  CAKE: "Gâteau"
+  COOKIE: "Cookie"
+  MELON: "Pastèque"
+  PUMPKIN: "Citrouille"
+  
+  # Miscellaneous
+  BOOK: "Livre"
+  PAPER: "Papier"
+  FEATHER: "Plume"
+  LEATHER: "Cuir"
+  STRING: "Ficelle"
+  STICK: "Bâton"
+  BOWL: "Bol"
+  BUCKET: "Seau"
+  WATER_BUCKET: "Seau d'eau"
+  LAVA_BUCKET: "Seau de lave"
+  MILK_BUCKET: "Seau de lait"
+  
+  # Nether items
+  NETHERRACK: "Netherrack"
+  SOUL_SAND: "Sable des âmes"
+  SOUL_SOIL: "Terre des âmes"
+  NETHER_BRICKS: "Briques du Nether"
+  NETHER_BRICK: "Brique du Nether"
+  GLOWSTONE: "Pierre lumineuse"
+  GLOWSTONE_DUST: "Poudre de pierre lumineuse"
+  BLAZE_ROD: "Bâton de blaze"
+  BLAZE_POWDER: "Poudre de blaze"
+  GHAST_TEAR: "Larme de ghast"
+  NETHER_WART: "Verrues du Nether"
+  
+  # End items
+  END_STONE: "Pierre de l'End"
+  ENDER_PEARL: "Perle de l'Ender"
+  ENDER_EYE: "Œil de l'Ender"
+  DRAGON_EGG: "Œuf de dragon"
+  ELYTRA: "Élytres"
+  SHULKER_SHELL: "Carapace de shulker"
+  
+  # Redstone
+  REDSTONE_TORCH: "Torche de redstone"
+  REDSTONE_LAMP: "Lampe de redstone"
+  PISTON: "Piston"
+  STICKY_PISTON: "Piston collant"
+  DISPENSER: "Distributeur"
+  DROPPER: "Largueur"
+  HOPPER: "Entonnoir"
+  CHEST: "Coffre"
+  TRAPPED_CHEST: "Coffre piégé"
+  ENDER_CHEST: "Coffre de l'Ender"
+  FURNACE: "Fourneau"
+  BLAST_FURNACE: "Haut fourneau"
+  SMOKER: "Fumoir"
+  CRAFTING_TABLE: "Table de craft"
+  ENCHANTING_TABLE: "Table d'enchantement"
+  ANVIL: "Enclume"
+  BREWING_STAND: "Alambic"
+  CAULDRON: "Chaudron"
+  
+  # Blocks
+  GLASS: "Verre"
+  OBSIDIAN: "Obsidienne"
+  BEDROCK: "Bedrock"
+  SPONGE: "Éponge"
+  WET_SPONGE: "Éponge humide"
+  ICE: "Glace"
+  PACKED_ICE: "Glace compactée"
+  BLUE_ICE: "Glace bleue"
+  SNOW_BLOCK: "Bloc de neige"
+  SNOWBALL: "Boule de neige"

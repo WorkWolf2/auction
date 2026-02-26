@@ -1,0 +1,76 @@
+limits:
+  categories:
+    shulker_limit:
+      limits: 1
+      list:
+        - "SHULKER_BOX"
+        - "WHITE_SHULKER_BOX"
+        - "LIGHT_GRAY_SHULKER_BOX"
+        - "GRAY_SHULKER_BOX"
+        - "BLACK_SHULKER_BOX"
+        - "BROWN_SHULKER_BOX"
+        - "RED_SHULKER_BOX"
+        - "ORANGE_SHULKER_BOX"
+        - "YELLOW_SHULKER_BOX"
+        - "LIME_SHULKER_BOX"
+        - "GREEN_SHULKER_BOX"
+        - "CYAN_SHULKER_BOX"
+        - "LIGHT_BLUE_SHULKER_BOX"
+        - "BLUE_SHULKER_BOX"
+        - "PURPLE_SHULKER_BOX"
+        - "MAGENTA_SHULKER_BOX"
+        - "PINK_SHULKER_BOX"
+      messages:
+        expired: '&4&l✘ &cUne shulkerbox expirée est déjà en attente de récupération dans votre hôtel des ventes, récupérez la dans la catégorie "Vos objets en vente"'
+        purchases: '&4&l✘ &cUne shulkerbox est déjà en attente de récupération dans votre hôtel des ventes, récupérez la dans la catégorie "Vos achats"'
+        sales: "&4&l✘ &cUne shulkerbox est déjà en vente dans votre hôtel des ventes, vous devez d'abord la récupérer pour effectuer cette action."
+        default: "&4&l✘ &cVous avez atteint la limite de shulkerbox dans votre hôtel des ventes."
+    bundle_limit:
+      limits: 1
+      list:
+        - "BUNDLE"
+        - "WHITE_BUNDLE"
+        - "LIGHT_GRAY_BUNDLE"
+        - "GRAY_BUNDLE"
+        - "BLACK_BUNDLE"
+        - "BROWN_BUNDLE"
+        - "RED_BUNDLE"
+        - "ORANGE_BUNDLE"
+        - "YELLOW_BUNDLE"
+        - "LIME_BUNDLE"
+        - "GREEN_BUNDLE"
+        - "CYAN_BUNDLE"
+        - "LIGHT_BLUE_BUNDLE"
+        - "BLUE_BUNDLE"
+        - "PURPLE_BUNDLE"
+        - "MAGENTA_BUNDLE"
+        - "PINK_BUNDLE"
+      messages:
+        expired: '&4&l✘ &cUn sac expiré est déjà en attente de récupération dans votre hôtel des ventes, récupérez le dans la catégorie "Vos objets en vente"'
+        purchases: '&4&l✘ &cUn sac est déjà en attente de récupération dans votre hôtel des ventes, récupérez le dans la catégorie "Vos achats"'
+        sales: "&4&l✘ &cUn sac est déjà en vente dans votre hôtel des ventes, vous devez d'abord le récupérer pour effectuer cette action."
+        default: "&4&l✘ &cVous avez atteint la limite de sac dans votre hôtel des ventes."
+  "default":
+    permissions:
+      "group-default": true
+    limit: 2
+    message: "<red>fdhjefdVous avez atteint la limite de ventes à l’Hôtel des ventes ! Passez Premium pour l’augmenter : /premium"
+  "premium":
+    permissions:
+      "group-premium": true
+    limit: 5
+    message: "&4&l✘ &cVous avez atteint la limite de ventes à l’Hôtel des ventes ! &7Passez Premium+ pour l’augmenter : /premium"
+  "premiumplus":
+    permissions:
+      "group-premiumplus": true
+    limit: 15
+    message: "&4&l✘ &cVous avez atteint la limite maximale de ventes à l’Hôtel des ventes !"
+    
+global-slots:
+  enabled: true
+  default: 15
+  messages:
+    # Message when trying to buy but global slots are full
+    cannot-buy: "&4&l✘ &cTu as &e%current%&c/&e%limit% &cobjets dans le stockage. Vide tes objets &eachetés &cou &eexpirés &cavant d’en acheter davantage."
+    # Message when trying to sell but global slots are full  
+    cannot-sell: "&4&l✘ &cTu as &e%current%&c/&e%limit% &cobjets dans le stockage. Vide tes objets &eachetés &cou &eexpirés &cavant d’en ajouter d’autres."
