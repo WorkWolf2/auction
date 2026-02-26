@@ -56,6 +56,7 @@ public final class HypingAuctions extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        SellConfirmManager.clearAllSessions();
         shutdownManagers();
         shutdownCache();
         shutdownAsyncExecutor();
@@ -222,7 +223,8 @@ public final class HypingAuctions extends JavaPlugin {
         register("refresh", new RefreshCommand(), "Refresh auction house.", "/hauctions refresh [player]", null);
 
         register("history", new HistoryCommand(), "Get auction history.", "/hauctions history <player name>", "hauction.history");
-        register("sellconfirm", new SellConfirmActionCommand(this), "cancel or confirm", "/hacutions sellconfirm/sellcancel", "hauction.sellactiond");
+        register("sellconfirm", new SellConfirmCommand(this), "Confirm sell.", "/hauctions sellconfirm <uuid>", "hauction.sellaction");
+        register("sellcancel",  new SellCancelCommand(this),  "Cancel sell.",  "/hauctions sellcancel <uuid>",  "hauction.sellaction");
     }
 
     private void registerPremiumCommands() {

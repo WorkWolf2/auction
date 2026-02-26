@@ -373,9 +373,7 @@ public class SellCommand implements CommandExecutor, TabCompleter {
         }
     }
 
-    /**
-     * Open the new menu-based confirmation GUI
-     */
+
     private void openConfirmationMenu(
             Player player,
             AuctionPlayer auctionPlayer,
@@ -384,7 +382,6 @@ public class SellCommand implements CommandExecutor, TabCompleter {
             Currency currency,
             double taxToPay) {
 
-        // Create session
         SellConfirmSession session = new SellConfirmSession(
                 player,
                 auctionPlayer,
@@ -394,7 +391,9 @@ public class SellCommand implements CommandExecutor, TabCompleter {
                 taxToPay
         );
 
-        // Create and open menu
+        SellConfirmManager.storeSession(
+                player.getUniqueId(), session);
+
         SellConfirmMenu menu = new SellConfirmMenu(HypingAuctions.getInstance(), session);
         menu.open(player);
     }

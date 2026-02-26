@@ -8,6 +8,9 @@ import fr.hyping.hypingauctions.manager.AuctionManager;
 import fr.hyping.hypingauctions.menu.AbstractHAuctionMenu;
 import fr.hyping.hypingauctions.service.AveragePriceService;
 import fr.hyping.hypingauctions.util.Messages;
+import fr.hyping.hypingcounters.api.CountersAPI;
+import fr.hyping.hypingcounters.counter.value.AbstractValue;
+import fr.hyping.hypingcounters.player.PlayerData;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -31,13 +34,10 @@ public class SellConfirmMenu extends AbstractHAuctionMenu {
 
     @Override
     public void postSlotsRead(Player viewer) {
-        // Start calculating average price asynchronously
         AveragePriceService.getInstance()
                 .calculateAveragePrice(session.getItemToSell())
                 .thenAccept(avgPrice -> {
                     session.setAveragePrice(avgPrice != null ? avgPrice : 0);
-
-                    // Refresh the menu to update placeholders
                     viewer.getScheduler().run(getPlugin(), task -> {
                         if (getInvHolder() != null && getInvHolder().getOwner().equals(viewer)) {
                             refresh();
@@ -53,12 +53,10 @@ public class SellConfirmMenu extends AbstractHAuctionMenu {
 
     @Override
     public void postSlotsClean(Player viewer) {
-        // No dynamic slots to clean in confirmation menu
     }
 
     @Override
     public void postSlotsApply(Player viewer) {
-        // Apply the item preview
         TemplateItemConfigEntry previewConfig = getConfigEntry().getTemplateItem("preview-item");
         if (previewConfig != null) {
             int[] destSlots = getConfigEntry().destSlots().get("preview");
@@ -66,26 +64,23 @@ public class SellConfirmMenu extends AbstractHAuctionMenu {
                 int destSlot = destSlots[0];
 
                 AbstractMenuHolder holder = getInvHolder();
-                int srcSlot = previewConfig.srcSlot();
+                ItemSlot templateButton = holder.getSlots()[previewConfig.srcSlot()];
 
-                ItemStack templateItem = holder.getInventory().getItem(srcSlot);
-                ItemSlot templateButton = holder.getSlots()[srcSlot];
+                ItemStack previewItem = session.getItemToSell().clone();
+                Map<String, String> placeholders = getPlaceholderMap();
 
-                if (templateItem != null) {
-                    // Clone the actual item being sold
-                    ItemStack previewItem = session.getItemToSell().clone();
-
-                    // Preserve the item's original display name and lore
-                    Map<String, String> placeholders = getPlaceholderMap();
-
-                    applyTemplateItem(destSlot, previewItem, templateButton, placeholders);
-                }
+                applyTemplateItem(destSlot, previewItem, templateButton, placeholders,
+                        () -> {
+                            setPlaceholders(placeholders);
+                            applyRequirementReplacements(placeholders, viewer);
+                        });
+                return;
             }
         }
 
-        // Apply placeholders to all other items
-        setPlaceholders(getPlaceholderMap());
-        applyRequirementReplacements(getPlaceholderMap(), viewer);
+        Map<String, String> placeholders = getPlaceholderMap();
+        setPlaceholders(placeholders);
+        applyRequirementReplacements(placeholders, viewer);
     }
 
     @Override
@@ -122,21 +117,33 @@ public class SellConfirmMenu extends AbstractHAuctionMenu {
         return placeholders;
     }
 
-    /**
-     * Called when the player clicks confirm
-     */
-    public void handleConfirm() {
+    public boolean handleConfirm() {
         Player player = session.getPlayer();
 
-        // Verify the item is still in the player's hand
         ItemStack hand = player.getInventory().getItemInMainHand();
         if (!isSameItem(session.getItemToSell(), hand)) {
             Messages.SELL_ITEM_CHANGED.send(player);
             player.closeInventory();
-            return;
+            return false;
         }
 
-        // Execute the sale
+        PlayerData data = CountersAPI.getOrCreateIfNotExists(player.getUniqueId());
+        AbstractValue<?> sellerCounter = session.getCurrency()
+                .counter()
+                .getDataParser()
+                .getOrCreate(data, session.getCurrency().counter());
+
+        double balance = sellerCounter.getDoubleValue();
+        double taxToPay = session.getTaxToPay();
+
+        if (balance < taxToPay) {
+            Messages.NOT_ENOUGH_MONEY_SELL.send(player);
+            player.closeInventory();
+            return false;
+        }
+
+        sellerCounter.setDoubleValue(balance - taxToPay, player.getUniqueId().toString());
+
         AuctionManager.sellAuction(
                 session.getAuctionPlayer(),
                 session.getItemToSell(),
@@ -144,30 +151,21 @@ public class SellConfirmMenu extends AbstractHAuctionMenu {
                 session.getCurrency()
         );
 
-        // Remove item from hand
         player.getInventory().setItemInMainHand(null);
 
-        // Send success message
-        Messages.SUCCESS_ITEM_SOLD.send(player); // You'll need to implement this message
-
+        Messages.SUCCESS_ITEM_SOLD.send(player);
         player.closeInventory();
+        return true;
     }
 
-    /**
-     * Called when the player clicks cancel
-     */
     public void handleCancel() {
-        Player player = session.getPlayer();
-        Messages.SELL_INPUT_CANCELED.send(player);
-        player.closeInventory();
+        Messages.SELL_INPUT_CANCELED.send(session.getPlayer());
+        session.getPlayer().closeInventory();
     }
 
-    /**
-     * Check if two items are the same
-     */
     private boolean isSameItem(ItemStack a, ItemStack b) {
         if (a == null || b == null) return false;
-        if (!a.getType().equals(b.getType())) return false;
+        if (a.getType() != b.getType()) return false;
         if (a.getAmount() != b.getAmount()) return false;
 
         ItemMeta ma = a.getItemMeta();
@@ -175,7 +173,6 @@ public class SellConfirmMenu extends AbstractHAuctionMenu {
 
         if (ma == null && mb == null) return true;
         if (ma == null || mb == null) return false;
-
         return ma.equals(mb);
     }
 }

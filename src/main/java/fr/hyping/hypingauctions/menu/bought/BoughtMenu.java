@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,15 +31,12 @@ public class BoughtMenu extends AbstractHAuctionMenu {
     }
 
     @Override
-    public void postSlotsRead(Player viewer) {
-    }
+    public void postSlotsRead(Player viewer) {}
 
     @Override
     public void postSlotsClean(Player viewer) {
         int[] destSlots = getConfigEntry().destSlots().get("auction-items");
-        if (destSlots == null) {
-            return;
-        }
+        if (destSlots == null) return;
 
         AbstractMenuHolder holder = getInvHolder();
         Inventory inventory = holder.getInventory();
@@ -64,41 +62,35 @@ public class BoughtMenu extends AbstractHAuctionMenu {
 
         AbstractMenuHolder holder = getInvHolder();
         int srcSlot = auctionItemConfig.srcSlot();
-
         ItemStack templateItem = holder.getInventory().getItem(srcSlot);
         ItemSlot templateButton = holder.getSlots()[srcSlot];
 
         if (templateItem == null) {
-            getPlugin().getLogger().warning("Template item not found at slot " + srcSlot + " for auction-item");
+            setPlaceholders(getPlaceholderMap());
             return;
         }
 
         List<Auction> auctionsToDisplay = getSession().getAuctionsForCurrentPage();
-
         int maxItems = Math.min(auctionsToDisplay.size(), destSlots.length);
 
+        List<TemplateItemEntry> entries = new ArrayList<>(maxItems);
         for (int i = 0; i < maxItems; i++) {
             Auction auction = auctionsToDisplay.get(i);
-            int destSlot = destSlots[i];
-
-            Map<String, String> placeholders = createAuctionPlaceholders(auction, viewer);
-
-            applyTemplateItem(destSlot, templateItem, templateButton, placeholders);
+            entries.add(new TemplateItemEntry(destSlots[i], templateItem, templateButton,
+                    createAuctionPlaceholders(auction, viewer)));
         }
 
-        setPlaceholders(getPlaceholderMap());
+        Map<String, String> staticPlaceholders = getPlaceholderMap();
+        applyTemplateItemsBatch(entries, staticPlaceholders, () -> setPlaceholders(staticPlaceholders));
     }
 
     @Override
     public Map<String, String> getPlaceholderMap() {
         Map<String, String> placeholders = new HashMap<>(getCommonPlaceholders());
-
         BoughtMenuSession session = getSession();
-
         placeholders.put("{CURRENT_PAGE}", String.valueOf(session.getPage()));
         placeholders.put("{MAX_PAGES}", String.valueOf(session.getLastPage()));
         placeholders.put("{TOTAL_PURCHASES}", String.valueOf(session.getAuctionPlayer().getPurchases().size()));
-
         return placeholders;
     }
 
@@ -116,11 +108,9 @@ public class BoughtMenu extends AbstractHAuctionMenu {
         placeholders.put("{ITEM_TYPE}", auction.getItem().getType().name());
         placeholders.put("{AUCTION_ID}", String.valueOf(auction.getId()));
 
-        // Purchase date if available
         if (auction.getPurchaseDate() > 0) {
             placeholders.put("{PURCHASE_DATE}", Format.formatTime(auction.getPurchaseDate()));
         }
-
         return placeholders;
     }
 }

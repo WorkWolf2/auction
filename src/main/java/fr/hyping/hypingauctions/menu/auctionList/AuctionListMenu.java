@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,9 +40,7 @@ public class AuctionListMenu extends AbstractHAuctionMenu {
     @Override
     public void postSlotsClean(Player viewer) {
         int[] destSlots = getConfigEntry().destSlots().get("auction-items");
-        if (destSlots == null) {
-            return;
-        }
+        if (destSlots == null) return;
 
         AbstractMenuHolder holder = getInvHolder();
         Inventory inventory = holder.getInventory();
@@ -73,23 +72,23 @@ public class AuctionListMenu extends AbstractHAuctionMenu {
 
         if (templateItem == null) {
             getPlugin().getLogger().warning("Template item not found at slot " + srcSlot + " for auction-item");
+            setPlaceholders(getPlaceholderMap());
             return;
         }
 
         List<Auction> auctionsToDisplay = getSession().getAuctionsForCurrentPage();
-
         int maxItems = Math.min(auctionsToDisplay.size(), destSlots.length);
 
+        List<TemplateItemEntry> entries = new ArrayList<>(maxItems);
         for (int i = 0; i < maxItems; i++) {
             Auction auction = auctionsToDisplay.get(i);
             int destSlot = destSlots[i];
-
             Map<String, String> placeholders = createAuctionPlaceholders(auction, viewer);
-
-            applyTemplateItem(destSlot, templateItem, templateButton, placeholders);
+            entries.add(new TemplateItemEntry(destSlot, templateItem, templateButton, placeholders));
         }
 
-        setPlaceholders(getPlaceholderMap());
+        Map<String, String> staticPlaceholders = getPlaceholderMap();
+        applyTemplateItemsBatch(entries, staticPlaceholders, () -> setPlaceholders(staticPlaceholders));
     }
 
     @Override
@@ -117,22 +116,17 @@ public class AuctionListMenu extends AbstractHAuctionMenu {
         placeholders.put("{SELLER}", auction.getSeller().getPlayer().getName());
         placeholders.put("{QUANTITY}", String.valueOf(auction.getItem().getAmount()));
         placeholders.put("{ITEM_TYPE}", auction.getItem().getType().name());
-
-        long expirationTime = auction.getExpirationTime();
-        placeholders.put("{EXPIRATION}", Format.formatTime(expirationTime));
-
+        placeholders.put("{EXPIRATION}", Format.formatTime(auction.getExpirationTime()));
         placeholders.put("{AUCTION_ID}", String.valueOf(auction.getId()));
 
         int avgPrice = AveragePriceService.getInstance().getFromCacheIncludingExpired(auction.getItem());
-
         if (avgPrice == 0) {
             AveragePriceService.getInstance().calculateAveragePrice(auction.getItem())
-                    .thenAccept(price -> {
-                        getPlugin().debug(() -> "Average price calculated for " + auction.getItem().getType() + ": " + price);
-                    });
+                    .thenAccept(price -> getPlugin().debug(() ->
+                            "Average price calculated for " + auction.getItem().getType() + ": " + price));
         }
 
-        String unknownText = getPlugin().getConfig().getString("placeholders.average-price.no-price");
+        String unknownText = getPlugin().getConfig().getString("placeholders.average-price.no-price", "N/A");
         placeholders.put("{AVERAGE_PRICE}", avgPrice > 0 ? Format.formatNumber(avgPrice) : unknownText);
 
         return placeholders;

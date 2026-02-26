@@ -43,6 +43,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jspecify.annotations.NonNull;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public abstract class AbstractHAuctionMenu implements HAuctionMenu {
@@ -118,34 +119,34 @@ public abstract class AbstractHAuctionMenu implements HAuctionMenu {
 
         if (firstOpen) {
             this.preApply(viewer);
-            this.invHolder.buildSlots(); // not placed in inventory
-
-            this.invHolder.buildInventory(false); // places slots in inventory
+            this.invHolder.buildSlots();
+            this.invHolder.buildInventory(false);
             this.postSlotsRead(viewer);
         }
 
-        // Even if the menu is already open, clean all the slots & apply templated items
         this.postSlotsClean(viewer);
         this.postSlotsApply(viewer);
     }
 
+    /**
+     * Applica i placeholder a tutti gli item statici nell'inventario (non-dinamici).
+     * Deve essere chiamato DOPO che tutti gli item dinamici sono stati inseriti.
+     */
     protected void setPlaceholders(Map<String, String> placeholderMap) {
         AbstractMenuHolder holder = this.getInvHolder();
-
         Inventory inventory = holder.getInventory();
         ItemStack[] contents = inventory.getContents();
-
         ItemSlot[] buttonSlots = holder.getSlots();
 
         for (int slot = 0; slot < contents.length; slot++) {
             ItemStack item = contents[slot];
-            item = applyPlaceholders(placeholderMap, item);
-            inventory.setItem(slot, item);
+            if (item == null) continue;
+
+            ItemStack replaced = applyPlaceholders(placeholderMap, item);
+            inventory.setItem(slot, replaced);
 
             ItemSlot buttonSlot = buttonSlots[slot];
-            if (buttonSlot == null) {
-                continue;
-            }
+            if (buttonSlot == null) continue;
 
             Player viewer = holder.getOwner();
             ItemSlot newSlot = applyActionPlaceholders(buttonSlot.item(), slot, placeholderMap, viewer);
@@ -158,16 +159,14 @@ public abstract class AbstractHAuctionMenu implements HAuctionMenu {
 
         ItemStack item = originalItem.clone();
 
-        Component customName = item.getItemMeta().customName();
+        Component customName = item.getItemMeta() != null ? item.getItemMeta().customName() : null;
         if (customName != null) {
             customName = customName.decoration(TextDecoration.ITALIC, false);
             customName = replaceComponentPlaceholder(placeholderMap, customName);
         }
 
         List<Component> origLore = item.lore();
-        List<Component> lore = origLore == null
-                ? new ArrayList<>()
-                : new ArrayList<>(origLore);
+        List<Component> lore = origLore == null ? new ArrayList<>() : new ArrayList<>(origLore);
 
         for (int i = 0; i < lore.size(); i++) {
             Component line = lore.get(i);
@@ -178,30 +177,24 @@ public abstract class AbstractHAuctionMenu implements HAuctionMenu {
         }
 
         Component finalDispName = customName;
-        boolean res = item.editMeta(meta -> {
+        item.editMeta(meta -> {
             if (finalDispName != null) meta.customName(finalDispName);
             meta.lore(lore);
         });
 
-        if (!res) {
-            System.out.println("Failed to edit item meta for item: " + item);
-        }
-
         return item;
     }
 
-    private static Component replaceComponentPlaceholder(Map<String, String> placeholderMap, Component customName) {
+    private static Component replaceComponentPlaceholder(Map<String, String> placeholderMap, Component component) {
         for (Map.Entry<String, String> entry : placeholderMap.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
             Component valueComp = ColorUtil.parseLegacy(value);
-
             Consumer<TextReplacementConfig.Builder> replacer = builder ->
                     builder.matchLiteral(key).replacement(valueComp);
-
-            customName = customName.replaceText(replacer);
+            component = component.replaceText(replacer);
         }
-        return customName;
+        return component;
     }
 
     protected ItemSlot applyActionPlaceholders(MenuItem menuButton, int destSlot, Map<String, String> placeholders, Player viewer) {
@@ -234,58 +227,44 @@ public abstract class AbstractHAuctionMenu implements HAuctionMenu {
     private @NonNull ClickAction convertClickAction(Map<String, String> placeholders, ClickAction origClickAction) {
         Action origAction = origClickAction.getAction();
         Action newAction = convertAction(placeholders, origClickAction, origAction);
-
         return ClickAction.wrap(origClickAction.getRequirement(), newAction);
     }
 
     private Action convertAction(Map<String, String> placeholders, ClickAction origClickAction, Action origAction) {
-        Action newAction = origAction;
-
         if (origAction instanceof PlayerCommandAction(String command)) {
-            newAction = new PlayerCommandAction(applyStringPlaceholders(placeholders, command));
-        }
-        else if (origAction instanceof ConsoleCommandAction(String command)) {
-            newAction = new ConsoleCommandAction(applyStringPlaceholders(placeholders, command));
-        }
-        else if (origAction instanceof DelayAction(long delay, Action callback)) {
+            return new PlayerCommandAction(applyStringPlaceholders(placeholders, command));
+        } else if (origAction instanceof ConsoleCommandAction(String command)) {
+            return new ConsoleCommandAction(applyStringPlaceholders(placeholders, command));
+        } else if (origAction instanceof DelayAction(long delay, Action callback)) {
             Action newSubAction = convertAction(placeholders, origClickAction, callback);
-            newAction = new DelayAction(delay, newSubAction);
-        }
-        else if (origAction instanceof MultipleAction(Action[] subActions)) {
+            return new DelayAction(delay, newSubAction);
+        } else if (origAction instanceof MultipleAction(Action[] subActions)) {
             subActions = subActions.clone();
-
             for (int i = 0; i < subActions.length; i++) {
-                Action subAction = subActions[i];
-                Action newSubAction = convertClickAction(placeholders, ClickAction.wrap(origClickAction.getRequirement(), subAction)).getAction();
-                subActions[i] = newSubAction;
+                subActions[i] = convertClickAction(placeholders,
+                        ClickAction.wrap(origClickAction.getRequirement(), subActions[i])).getAction();
             }
-
-            newAction = new MultipleAction(subActions);
+            return new MultipleAction(subActions);
         }
-        return newAction;
+        return origAction;
     }
 
     protected String applyStringPlaceholders(Map<String, String> placeholders, String str) {
         String result = str;
-
         for (Map.Entry<String, String> entry : placeholders.entrySet()) {
             result = result.replace(entry.getKey(), entry.getValue());
         }
-
         return result;
     }
 
     protected void applyRequirementReplacements(Map<String, String> placeholders, Player viewer) {
         List<MenuItem> items = this.getInvHolder().getAvailableItems();
-
         ListIterator<MenuItem> iter = items.listIterator();
         while (iter.hasNext()) {
             MenuItem item = iter.next();
             if (!(item instanceof BaseMenuItem baseItem)) continue;
-
             BaseMenuItem newBaseItem = this.applyReqReplacementsForItem(placeholders, baseItem);
             if (newBaseItem == null) continue;
-
             iter.set(newBaseItem);
         }
     }
@@ -293,10 +272,7 @@ public abstract class AbstractHAuctionMenu implements HAuctionMenu {
     protected BaseMenuItem applyReqReplacementsForItem(Map<String, String> placeholders, BaseMenuItem baseItem) {
         Requirement viewReq = baseItem.getViewRequirement();
         Requirement newReq = replaceRequirement(placeholders, viewReq);
-
-        if (newReq == viewReq) {
-            return baseItem;
-        }
+        if (newReq == viewReq) return baseItem;
 
         return new BaseMenuItem(
                 baseItem.getId(),
@@ -310,115 +286,122 @@ public abstract class AbstractHAuctionMenu implements HAuctionMenu {
     }
 
     private Requirement replaceRequirement(Map<String, String> placeholders, Requirement viewReq) {
-        Requirement newReq = viewReq;
-
         if (viewReq instanceof Requirements multiReq) {
             ExecutableRequirement[] copy = multiReq.requirements().clone();
             boolean edited = false;
-
             for (int j = 0; j < copy.length; j++) {
                 ExecutableRequirement execReq = copy[j];
                 if (!(execReq instanceof WrappedExecutableRequirement wrappedExecReq)) continue;
-
                 Requirement original = wrappedExecReq.requirement();
                 Requirement replacedReq = replaceRequirement(placeholders, original);
-
-                if (replacedReq == original) {
-                    continue;
-                }
-
-                Action success = wrappedExecReq.successAction();
-                Action deny = wrappedExecReq.denyAction();
-                copy[j] = ExecutableRequirement.wrap(replacedReq, success, deny);
-
+                if (replacedReq == original) continue;
+                copy[j] = ExecutableRequirement.wrap(replacedReq, wrappedExecReq.successAction(), wrappedExecReq.denyAction());
                 edited = true;
             }
-
-            if (edited) {
-                newReq = new Requirements(copy);
-            }
+            return edited ? new Requirements(copy) : viewReq;
+        } else if (viewReq instanceof PlaceholderRequirement papiReq) {
+            String replaced = this.applyStringPlaceholders(placeholders, papiReq.requiredValue());
+            if (replaced.equals(papiReq.requiredValue())) return viewReq;
+            return new PlaceholderRequirement(papiReq.placeholder(), papiReq.predicateType(), replaced);
         }
-        else if (viewReq instanceof PlaceholderRequirement papiReq) {
-            String placeholder = papiReq.placeholder();
-            PredicateType predicateType = papiReq.predicateType();
-            String requiredValue = papiReq.requiredValue();
-
-            String replaced = this.applyStringPlaceholders(placeholders, requiredValue);
-
-            if (replaced.equals(requiredValue)) {
-                return viewReq;
-            }
-
-            newReq = new PlaceholderRequirement(placeholder, predicateType, replaced);
-        }
-        return newReq;
+        return viewReq;
     }
 
-    protected void applyTemplateItem(int slot, ItemStack item, ItemSlot button, Map<String, String> placeholders) {
+    protected void applyTemplateItem(int slot, ItemStack item, ItemSlot button,
+                                     Map<String, String> placeholders) {
+        applyTemplateItem(slot, item, button, placeholders, null);
+    }
+
+    protected void applyTemplateItem(int slot, ItemStack item, ItemSlot button,
+                                     Map<String, String> placeholders, Runnable onComplete) {
         ItemStack clone = this.applyPlaceholders(placeholders, item);
         AbstractMenuHolder hMenuHolder = this.getInvHolder();
         Player viewer = hMenuHolder.getOwner();
         Inventory inventory = hMenuHolder.getInventory();
 
-        MenuItem menuButton = button.item();
-        ItemSlot hMenuButtonSlot = applyActionPlaceholders(menuButton, slot, placeholders, viewer);
+        MenuItem menuButton = button != null ? button.item() : null;
+        ItemSlot hMenuButtonSlot = menuButton != null
+                ? applyActionPlaceholders(menuButton, slot, placeholders, viewer)
+                : null;
 
         viewer.getScheduler().run(getPlugin(), t -> {
             inventory.setItem(slot, clone);
-
             ItemSlot[] slots = hMenuHolder.getSlots();
-            slots[slot] = hMenuButtonSlot;
+            if (hMenuButtonSlot != null) {
+                slots[slot] = hMenuButtonSlot;
+            }
+            if (onComplete != null) {
+                onComplete.run();
+            }
         }, null);
     }
 
+    protected void applyTemplateItemsBatch(List<TemplateItemEntry> entries,
+                                           Map<String, String> staticPlaceholders,
+                                           Runnable onAllComplete) {
+        if (entries.isEmpty()) {
+            if (onAllComplete != null) onAllComplete.run();
+            return;
+        }
+
+        AbstractMenuHolder hMenuHolder = this.getInvHolder();
+        Player viewer = hMenuHolder.getOwner();
+        Inventory inventory = hMenuHolder.getInventory();
+        ItemSlot[] slots = hMenuHolder.getSlots();
+
+        AtomicInteger remaining = new AtomicInteger(entries.size());
+
+        for (TemplateItemEntry entry : entries) {
+            ItemStack clone = this.applyPlaceholders(entry.placeholders(), entry.item());
+            MenuItem menuButton = entry.button() != null ? entry.button().item() : null;
+            ItemSlot hMenuButtonSlot = menuButton != null
+                    ? applyActionPlaceholders(menuButton, entry.slot(), entry.placeholders(), viewer)
+                    : null;
+
+            viewer.getScheduler().run(getPlugin(), t -> {
+                inventory.setItem(entry.slot(), clone);
+                if (hMenuButtonSlot != null) {
+                    slots[entry.slot()] = hMenuButtonSlot;
+                }
+
+                if (remaining.decrementAndGet() == 0 && onAllComplete != null) {
+                    onAllComplete.run();
+                }
+            }, null);
+        }
+    }
+
+    public record TemplateItemEntry(int slot, ItemStack item, ItemSlot button, Map<String, String> placeholders) {}
+
     protected Map<String, String> getCommonPlaceholders() {
         Map<String, String> placeholders = new HashMap<>();
-
         PlaceholderableSession session = getSession();
-        if (session == null) {
-            return placeholders;
-        }
+        if (session == null) return placeholders;
 
-        // Try to get the player from session
-        Player player = null;
-        if (session instanceof AuctionListSession als) {
-            player = als.getPlayer();
-        } else if (session instanceof BoughtMenuSession bms) {
-            player = bms.getPlayer();
-        } else if (session instanceof ExpiredMenuSession ems) {
-            player = ems.getPlayer();
-        } else if (session instanceof HistoryMenuSession hms) {
-            player = hms.getPlayer();
-        } else if (session instanceof SimilarItemsMenuSession sms) {
-            player = sms.getPlayer();
-        }
+        Player player = extractPlayer(session);
+        if (player == null) return placeholders;
 
-        if (player == null) {
-            return placeholders;
-        }
-
-        // Get AuctionPlayer
         AuctionPlayer auctionPlayer = PlayerManager.getPlayer(player);
-        if (auctionPlayer == null) {
-            return placeholders;
-        }
+        if (auctionPlayer == null) return placeholders;
 
-        // Revenue and earnings
         placeholders.put("{TOTAL_REVENUE}", Format.formatNumber(auctionPlayer.getTotalEarned()));
         placeholders.put("{ITEMS_SOLD_COUNT}", String.valueOf(auctionPlayer.getSoldCount()));
-
-        // Active listings
-        int activeListings = auctionPlayer.getSales().size();
-        placeholders.put("{ACTIVE_LISTINGS_COUNT}", String.valueOf(activeListings));
-
-        // Total listings (active + expired)
-        int totalListings = auctionPlayer.getSales().size() + auctionPlayer.getExpired().size();
-        placeholders.put("{TOTAL_LISTINGS}", String.valueOf(totalListings));
-
-        // Spending
+        placeholders.put("{ACTIVE_LISTINGS_COUNT}", String.valueOf(auctionPlayer.getSales().size()));
+        placeholders.put("{TOTAL_LISTINGS}", String.valueOf(auctionPlayer.getSales().size() + auctionPlayer.getExpired().size()));
         placeholders.put("{AH_TOTAL_SPENT}", Format.formatNumber(auctionPlayer.getTotalSpent()));
         placeholders.put("{ITEMS_PURCHASED_COUNT}", String.valueOf(auctionPlayer.getBoughtCount()));
 
         return placeholders;
+    }
+
+    private Player extractPlayer(PlaceholderableSession session) {
+        return switch (session) {
+            case AuctionListSession als -> als.getPlayer();
+            case BoughtMenuSession bms -> bms.getPlayer();
+            case ExpiredMenuSession ems -> ems.getPlayer();
+            case HistoryMenuSession hms -> hms.getPlayer();
+            case SimilarItemsMenuSession sms -> sms.getPlayer();
+            default -> null;
+        };
     }
 }
