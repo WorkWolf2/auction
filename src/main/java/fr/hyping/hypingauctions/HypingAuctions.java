@@ -206,6 +206,8 @@ public final class HypingAuctions extends JavaPlugin {
         register("sign-search-clear", new SignSearchClearCommand(), "Clear search parameters.", "/hauctions sign-search-clear <player>", "hauctions.admin");
         register("searchreset", new SignSearchClearCommand(), "Reset search (alias).", "/hauctions searchreset <player>", "hauctions.admin");
 
+
+        register("category", new CategoryCommand(this), "Change auction category filter.", "/hauctions category [category]", null);
         register("pricereset", new PriceResetCommand(), "Reset prices.", "/hauctions pricereset <all|material|hand|vanilla|info>", "hauctions.admin");
     }
 

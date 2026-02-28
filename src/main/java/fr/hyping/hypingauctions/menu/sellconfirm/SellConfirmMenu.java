@@ -67,6 +67,10 @@ public class SellConfirmMenu extends AbstractHAuctionMenu {
                 ItemSlot templateButton = holder.getSlots()[previewConfig.srcSlot()];
 
                 ItemStack previewItem = session.getItemToSell().clone();
+                previewItem.editMeta(meta -> {
+                    meta.customName(null);
+                    meta.lore(null);
+                });
                 Map<String, String> placeholders = getPlaceholderMap();
 
                 applyTemplateItem(destSlot, previewItem, templateButton, placeholders,
@@ -153,7 +157,7 @@ public class SellConfirmMenu extends AbstractHAuctionMenu {
 
         player.getInventory().setItemInMainHand(null);
 
-        Messages.SUCCESS_ITEM_SOLD.send(player).;
+        Messages.SUCCESS_ITEM_SOLD.send(player);
         player.closeInventory();
         return true;
     }

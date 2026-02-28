@@ -8,10 +8,12 @@ import fr.hyping.hypingauctions.data.ShulkerboxGuiData;
 import fr.hyping.hypingauctions.database.AuctionDatabase;
 
 import fr.hyping.hypingauctions.manager.object.*;
+import fr.hyping.hypingauctions.menu.HAuctionMenu;
 import fr.hyping.hypingauctions.menu.auctionList.AuctionListMenu;
 import fr.hyping.hypingauctions.menu.auctionList.AuctionListSession;
 import fr.hyping.hypingauctions.util.Configs;
 import fr.hyping.hypingauctions.service.AveragePriceService;
+import fr.hyping.hypingauctions.util.HAuctionMenuHelper;
 import fr.natsu.items.entity.CustomItem;
 import java.util.ArrayList;
 import java.util.List;
@@ -579,14 +581,24 @@ public class AuctionManager {
 
       if (useTemplates) {
           AuctionPlayer ap = PlayerManager.getPlayer(player);
-          List<Auction> auctions = ap.getContext() != null
-                  ? ap.getContext().getFilteredAuctions()
-                  : AuctionManager.getAuctions();
 
-          AuctionListSession session = new AuctionListSession(player, auctions, HypingAuctions.getInstance().getConfig().getInt("auction-list-menu.auction-per-page", 27));
-          AuctionListMenu menu = new AuctionListMenu(HypingAuctions.getInstance(), session);
+          HAuctionMenu existingMenu = HAuctionMenuHelper.getOpenMenu(HypingAuctions.getInstance(), player);
+          if (existingMenu instanceof AuctionListMenu existingAuctionListMenu) {
 
-          menu.open(player);
+              existingAuctionListMenu.getSession().refreshAuctions();
+              existingAuctionListMenu.refresh();
+          } else {
+              List<Auction> auctionList = ap.getContext() != null
+                      ? ap.getContext().getFilteredAuctions()
+                      : AuctionManager.getAuctions();
+
+              AuctionListSession session = new AuctionListSession(
+                      player,
+                      auctionList,
+                      HypingAuctions.getInstance().getConfig().getInt("auction-list-menu.auction-per-page", 27));
+              AuctionListMenu menu = new AuctionListMenu(HypingAuctions.getInstance(), session);
+              menu.open(player);
+          }
       } else {
           RegisteredMenu menu = HypingMenus.getInstance().getMenu("hypingauctions/auction_list");
           if (menu != null) {
