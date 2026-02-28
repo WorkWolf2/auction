@@ -153,7 +153,7 @@ public class SellConfirmMenu extends AbstractHAuctionMenu {
 
         player.getInventory().setItemInMainHand(null);
 
-        Messages.SUCCESS_ITEM_SOLD.send(player);
+        Messages.SUCCESS_ITEM_SOLD.send(player).;
         player.closeInventory();
         return true;
     }

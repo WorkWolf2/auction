@@ -21,6 +21,10 @@ import java.util.Map;
 
 public class BoughtMenu extends AbstractHAuctionMenu {
 
+    // Cached once in postSlotsRead so postSlotsClean cannot destroy it.
+    private ItemStack cachedTemplateItem;
+    private ItemSlot  cachedTemplateButton;
+
     public BoughtMenu(HypingAuctions plugin, BoughtMenuSession session) {
         super(plugin, "bought", session);
     }
@@ -31,7 +35,26 @@ public class BoughtMenu extends AbstractHAuctionMenu {
     }
 
     @Override
-    public void postSlotsRead(Player viewer) {}
+    public void postSlotsRead(Player viewer) {
+        TemplateItemConfigEntry cfg = getConfigEntry().getTemplateItem("auction-item");
+        if (cfg == null) {
+            getPlugin().getLogger().warning("[BoughtMenu] Missing 'auction-item' template in config.");
+            return;
+        }
+
+        AbstractMenuHolder holder = getInvHolder();
+        int srcSlot = cfg.srcSlot();
+        ItemStack raw = holder.getInventory().getItem(srcSlot);
+
+        if (raw == null) {
+            getPlugin().getLogger().warning("[BoughtMenu] Template item is null at slot " + srcSlot
+                    + ". Check that src-slot points to a valid slot in the menu YAML.");
+            return;
+        }
+
+        this.cachedTemplateItem   = raw.clone();
+        this.cachedTemplateButton = holder.getSlots()[srcSlot];
+    }
 
     @Override
     public void postSlotsClean(Player viewer) {
@@ -39,8 +62,8 @@ public class BoughtMenu extends AbstractHAuctionMenu {
         if (destSlots == null) return;
 
         AbstractMenuHolder holder = getInvHolder();
-        Inventory inventory = holder.getInventory();
-        ItemSlot[] slots = holder.getSlots();
+        Inventory   inventory = holder.getInventory();
+        ItemSlot[]  slots     = holder.getSlots();
 
         for (int destSlot : destSlots) {
             if (destSlot >= 0 && destSlot < inventory.getSize()) {
@@ -52,65 +75,66 @@ public class BoughtMenu extends AbstractHAuctionMenu {
 
     @Override
     public void postSlotsApply(Player viewer) {
-        TemplateItemConfigEntry auctionItemConfig = getConfigEntry().getTemplateItem("auction-item");
         int[] destSlots = getConfigEntry().destSlots().get("auction-items");
 
-        if (auctionItemConfig == null || destSlots == null) {
-            getPlugin().getLogger().warning("Missing auction-item template or dest-slots for menu: " + configId());
-            return;
-        }
-
-        AbstractMenuHolder holder = getInvHolder();
-        int srcSlot = auctionItemConfig.srcSlot();
-        ItemStack templateItem = holder.getInventory().getItem(srcSlot);
-        ItemSlot templateButton = holder.getSlots()[srcSlot];
-
-        if (templateItem == null) {
+        if (destSlots == null) {
+            getPlugin().getLogger().warning("[BoughtMenu] Missing 'dest-slots.auction-items' in config.");
             setPlaceholders(getPlaceholderMap());
             return;
         }
 
-        List<Auction> auctionsToDisplay = getSession().getAuctionsForCurrentPage();
-        int maxItems = Math.min(auctionsToDisplay.size(), destSlots.length);
-
-        List<TemplateItemEntry> entries = new ArrayList<>(maxItems);
-        for (int i = 0; i < maxItems; i++) {
-            Auction auction = auctionsToDisplay.get(i);
-            entries.add(new TemplateItemEntry(destSlots[i], templateItem, templateButton,
-                    createAuctionPlaceholders(auction, viewer)));
+        if (cachedTemplateItem == null) {
+            getPlugin().getLogger().warning("[BoughtMenu] cachedTemplateItem is null — check src-slot in config.");
+            setPlaceholders(getPlaceholderMap());
+            return;
         }
 
-        Map<String, String> staticPlaceholders = getPlaceholderMap();
-        applyTemplateItemsBatch(entries, staticPlaceholders, () -> setPlaceholders(staticPlaceholders));
+        List<Auction> page    = getSession().getAuctionsForCurrentPage();
+        int           max     = Math.min(page.size(), destSlots.length);
+        List<TemplateItemEntry> entries = new ArrayList<>(max);
+
+        for (int i = 0; i < max; i++) {
+            Auction auction = page.get(i);
+            entries.add(new TemplateItemEntry(
+                    destSlots[i],
+                    cachedTemplateItem,
+                    cachedTemplateButton,
+                    createAuctionPlaceholders(auction, viewer),
+                    auction.getItem()
+            ));
+        }
+
+        Map<String, String> staticPh = getPlaceholderMap();
+        applyTemplateItemsBatch(entries, staticPh, () -> setPlaceholders(staticPh));
     }
 
     @Override
     public Map<String, String> getPlaceholderMap() {
-        Map<String, String> placeholders = new HashMap<>(getCommonPlaceholders());
-        BoughtMenuSession session = getSession();
-        placeholders.put("{CURRENT_PAGE}", String.valueOf(session.getPage()));
-        placeholders.put("{MAX_PAGES}", String.valueOf(session.getLastPage()));
-        placeholders.put("{TOTAL_PURCHASES}", String.valueOf(session.getAuctionPlayer().getPurchases().size()));
-        return placeholders;
+        Map<String, String> ph = new HashMap<>(getCommonPlaceholders());
+        BoughtMenuSession s = getSession();
+        ph.put("{CURRENT_PAGE}",    String.valueOf(s.getPage()));
+        ph.put("{MAX_PAGES}",       String.valueOf(s.getLastPage()));
+        ph.put("{TOTAL_PURCHASES}", String.valueOf(s.getAuctionPlayer().getPurchases().size()));
+        return ph;
     }
 
     private Map<String, String> createAuctionPlaceholders(Auction auction, Player viewer) {
-        Map<String, String> placeholders = new HashMap<>();
+        Map<String, String> ph = new HashMap<>();
 
         Component itemComponent = AutomaticMaterialTranslationManager.getInstance()
                 .getLocalizedComponent(viewer, auction.getItem());
         String itemName = LegacyComponentSerializer.legacySection().serialize(itemComponent);
 
-        placeholders.put("{ITEM_NAME}", itemName);
-        placeholders.put("{PRICE}", Format.formatNumber(auction.getPrice()));
-        placeholders.put("{SELLER}", auction.getSeller().getPlayer().getName());
-        placeholders.put("{QUANTITY}", String.valueOf(auction.getItem().getAmount()));
-        placeholders.put("{ITEM_TYPE}", auction.getItem().getType().name());
-        placeholders.put("{AUCTION_ID}", String.valueOf(auction.getId()));
+        ph.put("{ITEM_NAME}",  itemName);
+        ph.put("{PRICE}",      Format.formatNumber(auction.getPrice()));
+        ph.put("{SELLER}",     auction.getSeller().getPlayer().getName());
+        ph.put("{QUANTITY}",   String.valueOf(auction.getItem().getAmount()));
+        ph.put("{ITEM_TYPE}",  auction.getItem().getType().name());
+        ph.put("{AUCTION_ID}", String.valueOf(auction.getId()));
 
         if (auction.getPurchaseDate() > 0) {
-            placeholders.put("{PURCHASE_DATE}", Format.formatTime(auction.getPurchaseDate()));
+            ph.put("{PURCHASE_DATE}", Format.formatTime(auction.getPurchaseDate()));
         }
-        return placeholders;
+        return ph;
     }
 }

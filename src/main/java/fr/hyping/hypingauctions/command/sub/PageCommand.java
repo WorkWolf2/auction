@@ -24,7 +24,9 @@ public class PageCommand implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
+                             @NotNull String label, @NotNull String[] args) {
+
         if (!(sender instanceof Player player)) {
             sender.sendMessage(
                     Component.translatable("hyping.hypingauctions.command.page.console-not-supported"));
@@ -64,30 +66,30 @@ public class PageCommand implements CommandExecutor {
         try {
             if (pageArg.equalsIgnoreCase("next")) {
                 if (!paginatedSession.hasNextPage()) {
-                    sender.sendMessage(Component.translatable("hyping.hypingauctions.command.page.already-last"));
-
+                    sender.sendMessage(
+                            Component.translatable("hyping.hypingauctions.command.page.already-last"));
                     return true;
                 }
-
                 targetPage = paginatedSession.nextPage();
-            } else if (pageArg.equalsIgnoreCase("previous") || pageArg.equalsIgnoreCase("prev")) {
-                if (!paginatedSession.hasPreviousPage()) {
-                    sender.sendMessage(Component.translatable("hyping.hypingauctions.command.page.already-first"));
 
+            } else if (pageArg.equalsIgnoreCase("previous")
+                    || pageArg.equalsIgnoreCase("prev")) {
+                if (!paginatedSession.hasPreviousPage()) {
+                    sender.sendMessage(
+                            Component.translatable("hyping.hypingauctions.command.page.already-first"));
                     return true;
                 }
                 targetPage = paginatedSession.previousPage();
-            } else {
-                targetPage = Integer.parseInt(pageArg);
 
-                if (targetPage < paginatedSession.getFirstPage()) {
-                    targetPage = paginatedSession.getFirstPage();
-                } else if (targetPage > paginatedSession.getLastPage()) {
-                    targetPage = paginatedSession.getLastPage();
-                }
+            } else {
+                int requested = Integer.parseInt(pageArg);
+                targetPage = Math.max(paginatedSession.getFirstPage(),
+                        Math.min(requested, paginatedSession.getLastPage()));
             }
+
         } catch (NumberFormatException e) {
-            sender.sendMessage(Component.translatable("hyping.hypingauctions.command.page.invalid-number"));
+            sender.sendMessage(
+                    Component.translatable("hyping.hypingauctions.command.page.invalid-number"));
             return true;
         }
 
@@ -96,9 +98,9 @@ public class PageCommand implements CommandExecutor {
         menu.refresh();
 
         sender.sendMessage(Component.translatable(
-                        "hyping.hypingauctions.command.page.set",
-                        Component.text(targetPage),
-                        Component.text(paginatedSession.getLastPage())));
+                "hyping.hypingauctions.command.page.set",
+                Component.text(targetPage),
+                Component.text(paginatedSession.getLastPage())));
 
         return true;
     }

@@ -40,6 +40,7 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jspecify.annotations.NonNull;
 
 import java.util.*;
@@ -128,10 +129,6 @@ public abstract class AbstractHAuctionMenu implements HAuctionMenu {
         this.postSlotsApply(viewer);
     }
 
-    /**
-     * Applica i placeholder a tutti gli item statici nell'inventario (non-dinamici).
-     * Deve essere chiamato DOPO che tutti gli item dinamici sono stati inseriti.
-     */
     protected void setPlaceholders(Map<String, String> placeholderMap) {
         AbstractMenuHolder holder = this.getInvHolder();
         Inventory inventory = holder.getInventory();
@@ -152,6 +149,36 @@ public abstract class AbstractHAuctionMenu implements HAuctionMenu {
             ItemSlot newSlot = applyActionPlaceholders(buttonSlot.item(), slot, placeholderMap, viewer);
             buttonSlots[slot] = newSlot;
         }
+    }
+
+    protected ItemStack applyPlaceholdersOnAuctionItem(
+            ItemStack auctionItem,
+            ItemStack templateItem,
+            Map<String, String> placeholderMap) {
+
+        ItemStack result = auctionItem.clone();
+
+        ItemStack processedTemplate = applyPlaceholders(placeholderMap, templateItem.clone());
+
+        result.editMeta(resultMeta -> {
+            ItemMeta templateMeta = processedTemplate.getItemMeta();
+            if (templateMeta == null) return;
+
+            Component displayName = templateMeta.customName();
+            if (displayName != null) {
+                resultMeta.customName(displayName.decoration(TextDecoration.ITALIC, false));
+            }
+
+            List<Component> lore = templateMeta.lore();
+            if (lore != null && !lore.isEmpty()) {
+                resultMeta.lore(lore);
+            }
+            if (templateMeta.hasCustomModelData()) {
+                resultMeta.setCustomModelData(templateMeta.getCustomModelData());
+            }
+        });
+
+        return result;
     }
 
     protected ItemStack applyPlaceholders(Map<String, String> placeholderMap, ItemStack originalItem) {
@@ -336,6 +363,37 @@ public abstract class AbstractHAuctionMenu implements HAuctionMenu {
         }, null);
     }
 
+    protected void applyAuctionTemplateItem(
+            int slot,
+            ItemStack auctionItem,
+            ItemStack templateItem,
+            ItemSlot button,
+            Map<String, String> placeholders,
+            Runnable onComplete) {
+
+        ItemStack finalItem = applyPlaceholdersOnAuctionItem(auctionItem, templateItem, placeholders);
+
+        AbstractMenuHolder hMenuHolder = this.getInvHolder();
+        Player viewer = hMenuHolder.getOwner();
+        Inventory inventory = hMenuHolder.getInventory();
+
+        MenuItem menuButton = button != null ? button.item() : null;
+        ItemSlot hMenuButtonSlot = menuButton != null
+                ? applyActionPlaceholders(menuButton, slot, placeholders, viewer)
+                : null;
+
+        viewer.getScheduler().run(getPlugin(), t -> {
+            inventory.setItem(slot, finalItem);
+            ItemSlot[] slots = hMenuHolder.getSlots();
+            if (hMenuButtonSlot != null) {
+                slots[slot] = hMenuButtonSlot;
+            }
+            if (onComplete != null) {
+                onComplete.run();
+            }
+        }, null);
+    }
+
     protected void applyTemplateItemsBatch(List<TemplateItemEntry> entries,
                                            Map<String, String> staticPlaceholders,
                                            Runnable onAllComplete) {
@@ -352,7 +410,13 @@ public abstract class AbstractHAuctionMenu implements HAuctionMenu {
         AtomicInteger remaining = new AtomicInteger(entries.size());
 
         for (TemplateItemEntry entry : entries) {
-            ItemStack clone = this.applyPlaceholders(entry.placeholders(), entry.item());
+            final ItemStack clone;
+            if (entry.auctionItem() != null) {
+                clone = applyPlaceholdersOnAuctionItem(entry.auctionItem(), entry.item(), entry.placeholders());
+            } else {
+                clone = this.applyPlaceholders(entry.placeholders(), entry.item());
+            }
+
             MenuItem menuButton = entry.button() != null ? entry.button().item() : null;
             ItemSlot hMenuButtonSlot = menuButton != null
                     ? applyActionPlaceholders(menuButton, entry.slot(), entry.placeholders(), viewer)
@@ -363,7 +427,6 @@ public abstract class AbstractHAuctionMenu implements HAuctionMenu {
                 if (hMenuButtonSlot != null) {
                     slots[entry.slot()] = hMenuButtonSlot;
                 }
-
                 if (remaining.decrementAndGet() == 0 && onAllComplete != null) {
                     onAllComplete.run();
                 }
@@ -371,7 +434,17 @@ public abstract class AbstractHAuctionMenu implements HAuctionMenu {
         }
     }
 
-    public record TemplateItemEntry(int slot, ItemStack item, ItemSlot button, Map<String, String> placeholders) {}
+    public record TemplateItemEntry(
+            int slot,
+            ItemStack item,
+            ItemSlot button,
+            Map<String, String> placeholders,
+            ItemStack auctionItem
+    ) {
+        public TemplateItemEntry(int slot, ItemStack item, ItemSlot button, Map<String, String> placeholders) {
+            this(slot, item, button, placeholders, null);
+        }
+    }
 
     protected Map<String, String> getCommonPlaceholders() {
         Map<String, String> placeholders = new HashMap<>();

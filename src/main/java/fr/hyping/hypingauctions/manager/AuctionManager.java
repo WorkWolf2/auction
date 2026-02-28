@@ -586,12 +586,9 @@ public class AuctionManager {
           AuctionListSession session = new AuctionListSession(player, auctions, HypingAuctions.getInstance().getConfig().getInt("auction-list-menu.auction-per-page", 27));
           AuctionListMenu menu = new AuctionListMenu(HypingAuctions.getInstance(), session);
 
-          System.out.println("eseguito quello bello");
-
           menu.open(player);
       } else {
           RegisteredMenu menu = HypingMenus.getInstance().getMenu("hypingauctions/auction_list");
-          System.out.println("eseguito quello brutto");
           if (menu != null) {
               menu.open(player, false);
           }
